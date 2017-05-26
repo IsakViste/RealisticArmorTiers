@@ -1,0 +1,16 @@
+[
+{
+  "modid": "redstoneguns",
+  "name": "Redstone Guns",
+  "description": "Minecraft technology based on redstone.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Mentits"],
+  "credits": "The Forge and FML guys",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
