@@ -1,25 +1,26 @@
----------------------------------------
-Redstone Guns Mode for Minecraft 1.10.2
----------------------------------------
+-----------------------
+#Redstone Guns Mode
+##for Minecraft 1.10.2
+-----------------------
 
-FINISHED
+##FINISHED
 ========
 
 [] *nothing*
 
 
-PLANNED
+##PLANNED
 =======
 
 [] Weaponry
   [] Customisable
-    [] handgun
-    [] riffle
-    [] sniper
+    [] 'handgun'
+    [] 'riffle'
+    [] 'sniper'
   [] Mods
-    [] scope
-    [] flashlight
+    [] 'scope'
+    [] 'flashlight'
   [] Throwable
-    [] grenade
-    [] glow stick
+    [] 'grenade'
+    [] 'glow stick'
 [] Armory
