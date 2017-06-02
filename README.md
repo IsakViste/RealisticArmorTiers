@@ -17,7 +17,7 @@ Support for other mods will be added at a later date.
 ---
 
 ## <a name="current-features"></a>Current Features
-- [x] Weared Armor affects the players movement speed
+- [x] Worn Armor affects the players movement speed
 - [x] Wearing a full set applies potions effects depending on set
 
 ---
