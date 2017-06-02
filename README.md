@@ -14,23 +14,15 @@ This mod adds many different types of customisable weapons, new armor, defense m
 ---
 
 ## <a name="current-features"></a>Current Features
-- [x] Mod files
+- [x] Weared Armor affects the players movement speed
+- [x] Wearing a full set applies potions effects depending on set
 
 ---
 
 ## <a name="planned-features"></a>Planned Features
-**Weaponry**
-- [ ] *handgun*
-- [ ] *riffle*
-- [ ] *sniper*
-
-**Armory**
-- [ ] *nothing*
-
-**Blocks**
-- [ ] *nothing*
-
-**Items**
-- [ ] *nothing*
+**General**
+- [ ] Balance the mod
+- [ ] Add a config file where you can change potion effects and speed modifiers
+- [ ] Add support for other mods that add in armor
 
 ---
