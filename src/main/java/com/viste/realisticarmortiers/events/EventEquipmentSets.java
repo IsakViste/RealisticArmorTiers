@@ -1,20 +1,19 @@
 package com.viste.realisticarmortiers.events;
 
-import net.minecraft.entity.player.PlayerCapabilities;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.init.Items;
-import net.minecraft.init.PotionTypes;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionType;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
 
+import org.json.*;
 
 public class EventEquipmentSets {	
 	public EventEquipmentGlobalVar global;
