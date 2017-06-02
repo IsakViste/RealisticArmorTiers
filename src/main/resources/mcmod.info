@@ -1,8 +1,8 @@
 [
 {
-  "modid": "redstoneguns",
-  "name": "Redstone Guns",
-  "description": "Minecraft technology based on redstone.",
+  "modid": "realisticarmortiers",
+  "name": "Realistic Armor Tiers",
+  "description": "Makes low-tier armor more interesting and high-tier armor less op.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
