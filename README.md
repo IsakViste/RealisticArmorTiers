@@ -8,8 +8,11 @@
 ---
 
 ## <a name="information"></a>Information
-Redstone Guns is a minecraft 1.10.2 mod, adding many more uses to redstone with certain restrictions.
-This mod adds many different types of customisable weapons, new armor, defense mechanisms and much more, to help you survive.
+Realistic Armor Tiers is a minecraft 1.10.2 mod, making wear armor feel more RPG-like.
+The different armor types modifies the players speed when worn, leather will make you run slightly faster, while diamond makes you slightly slower.
+Wearing full sets will apply different amplitudes of potion effects for as long as the player wears the full armor.
+Everything will be full customisable from the armor affected, to the speed modifiers, to the potion effects and their amplitude when wearing a set.
+Support for other mods will be added at a later date.
 
 ---
 
