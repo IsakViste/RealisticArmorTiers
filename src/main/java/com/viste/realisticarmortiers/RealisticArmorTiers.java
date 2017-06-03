@@ -1,11 +1,15 @@
 package com.viste.realisticarmortiers;
 
+import java.io.File;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.viste.realisticarmortiers.proxy.IProxy;
 
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -14,39 +18,39 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid=Reference.MODID, name=Reference.NAME, version=Reference.VERSION)
 public class RealisticArmorTiers {
 	
-	private static final Logger LOGGER = LogManager.getLogger("RAT|Main");
+	private static final Logger log = LogManager.getLogger(Reference.MODID);
 	
-	@Mod.Instance(Reference.MODID)
+	@Instance(Reference.MODID)
     public static RealisticArmorTiers instance;
 	
 	@SidedProxy(clientSide=Reference.CLIENT_PROXY, serverSide=Reference.SERVER_PROXY)
 	public static IProxy proxy;
 	
-	@Mod.EventHandler
+	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		LOGGER.info("PreInitializing.");
+		log.info("PreInitializing.");
 		
 		proxy.preInit();
 		
-		LOGGER.info("PreInitializing DONE.");
+		log.info("PreInitializing DONE.");
 	}
 	
-	@Mod.EventHandler
+	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		LOGGER.info("Initializing.");
+		log.info("Initializing.");
 		
 		proxy.init();
 		
-		LOGGER.info("Initializing DONE.");
+		log.info("Initializing DONE.");
 	}
 	
-	@Mod.EventHandler
+	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		LOGGER.info("PostInitializing.");
+		log.info("PostInitializing.");
 		
 		proxy.postInit();
 		
-		LOGGER.info("PostInitializing DONE.");
+		log.info("PostInitializing DONE.");
 	}
 	
 }

@@ -18,7 +18,7 @@ public class EventEquipmentSets {
 	public EventEquipmentGlobalVar global;
 	public List<Armours> armours = new ArrayList<Armours>();
 	
-	//private static final Logger LOGGER = LogManager.getLogger("RAT|EquipmentSets");
+	//private static final Logger LOGGER = LogManager.getLogger(Reference.MODID);
 	
 	public EventEquipmentSets() {
 		
