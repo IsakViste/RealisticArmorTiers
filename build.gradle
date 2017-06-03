@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 
 version = "1.0.0"
-group= "dk.viste.isak.realisticarmortiers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group= "com.viste.isak.realisticarmortiers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "realisticarmortiers"
 
 sourceCompatibility = targetCompatibility = "1.6" // Need this here so eclipse task generates correctly.
