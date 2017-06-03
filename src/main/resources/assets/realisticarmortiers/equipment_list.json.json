@@ -1,0 +1,106 @@
+[
+  {
+    name: "leather",
+    pieces: [
+      "LEATHER_HELMET",
+      "LEATHER_CHESTPLATE",
+      "LEATHER_LEGGINGS",
+      "LEATHER_BOOTS"
+    ],
+    effects: [
+      {
+        "potion_effect": "jump_boost",
+        "efficiency": 3
+      },
+      {
+        "potion_effect": "water_breathing",
+        "efficiency": 1
+      },
+      {
+        "potion_effect": "night_vision",
+        "efficiency": 1
+      }
+    ],
+    speed_modifier: 0.012
+  },
+  {
+    name: "chain",
+    pieces: [
+      "CHAINMAIL_HELMET",
+      "CHAINMAIL_CHESTPLATE",
+      "CHAINMAIL_LEGGINGS",
+      "CHAINMAIL_BOOTS"
+    ],
+    effects: [
+      {
+        "potion_effect": "fire_resistance",
+        "efficiency": 3
+      },
+      {
+        "potion_effect": "strength",
+        "efficiency": 1
+      }
+    ],
+    speed_modifier: 0.008
+  },
+  {
+    name: "iron",
+    pieces: [
+      "IRON_HELMET",
+      "IRON_CHESTPLATE",
+      "IRON_LEGGINGS",
+      "IRON_BOOTS"
+    ],
+    effects: [
+      {
+        "potion_effect": "resistance",
+        "efficiency": 2
+      },
+      {
+        "potion_effect": "fire_resistance",
+        "efficiency": 1
+      }
+    ],
+    speed_modifier: -0.005
+  },
+  {
+    name: "gold",
+    pieces: [
+      "GOLDEN_HELMET",
+      "GOLDEN_CHESTPLATE",
+      "GOLDEN_LEGGINGS",
+      "GOLDEN_BOOTS"
+    ],
+    effects: [
+      {
+        "potion_effect": "strength",
+        "efficiency": 2
+      },
+      {
+        "potion_effect": "haste",
+        "efficiency": 1
+      }
+    ],
+    speed_modifier: -0.0025
+  },
+  {
+    name: "diamond",
+    pieces: [
+      "DIAMOND_HELMET",
+      "DIAMOND_CHESTPLATE",
+      "DIAMOND_LEGGINGS",
+      "DIAMOND_BOOTS"
+    ],
+    effects: [
+      {
+        "potion_effect": "resistance",
+        "efficiency": 3
+      },
+      {
+        "potion_effect": "blindness",
+        "efficiency": 1
+      }
+    ],
+    speed_modifier: -0.008
+  }
+]

@@ -13,13 +13,19 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
-import org.json.*;
-
 public class EventEquipmentSets {	
+	
 	public EventEquipmentGlobalVar global;
 	public List<Armours> armours = new ArrayList<Armours>();
+	
+	//private static final Logger LOGGER = LogManager.getLogger("RAT|EquipmentSets");
+	
 	public EventEquipmentSets() {
+		
 		this.global = new EventEquipmentGlobalVar();
+		
+		//JsonValue json_file = Json.parse(Reference.ASSET_PATH);
+		
 		List<ItemArmor> leather = Arrays.asList(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS);
 		List<ItemArmor> chain = Arrays.asList(Items.CHAINMAIL_HELMET, Items.CHAINMAIL_CHESTPLATE, Items.CHAINMAIL_LEGGINGS, Items.CHAINMAIL_BOOTS);
 		List<ItemArmor> iron = Arrays.asList(Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS);

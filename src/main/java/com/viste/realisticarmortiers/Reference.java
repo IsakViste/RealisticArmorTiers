@@ -9,4 +9,6 @@ public class Reference {
 	public static final String CLIENT_PROXY = "com.viste.realisticarmortiers.proxy.ClientProxy";
 	public static final String SERVER_PROXY = "com.viste.realisticarmortiers.proxy.CommonProxy";
 	
+	public static final String ASSET_PATH = "/assets/" + MODID + "/equipment_list.json";
+	public static final String CONFIG_PATH = "RealisticArmorTiers/equipment_list.json";
 }
