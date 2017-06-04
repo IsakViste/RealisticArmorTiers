@@ -1,8 +1,20 @@
 package com.viste.realisticarmortiers.events;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
+import com.viste.realisticarmortiers.RealisticArmorTiers;
+import com.viste.realisticarmortiers.Reference;
 
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -18,11 +30,23 @@ public class EventEquipmentSets {
 	public EventEquipmentGlobalVar global;
 	public List<Armours> armours = new ArrayList<Armours>();
 	
-	//private static final Logger LOGGER = LogManager.getLogger(Reference.MODID);
+	private static final Logger log = LogManager.getLogger(Reference.MODID);
 	
 	public EventEquipmentSets() {
 		
 		this.global = new EventEquipmentGlobalVar();
+		
+		Gson gson = new Gson();
+		
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(RealisticArmorTiers.class.getResource(Reference.ASSET_PATH).getPath()));
+			Type type = new TypeToken<List<JsonModel>>(){}.getType();
+			log.info("JSON file has been loaded");
+			List<JsonModel> models = gson.fromJson(br, type);
+		} catch (Exception e) {
+			log.fatal("JSON file could not be loaded:");
+			log.fatal(e);
+		}
 		
 		List<ItemArmor> leather = Arrays.asList(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS);
 		List<ItemArmor> chain = Arrays.asList(Items.CHAINMAIL_HELMET, Items.CHAINMAIL_CHESTPLATE, Items.CHAINMAIL_LEGGINGS, Items.CHAINMAIL_BOOTS);
@@ -51,11 +75,14 @@ public class EventEquipmentSets {
 
 	@SubscribeEvent
 	public void onArmorUpdate(PlayerTickEvent evt) {
+		
 		Item armor = null;
-		int j=0;
 		ItemStack stacks = null;
+		
+		int j=0;
+		
 		global.setSpeed(0.1f);
-		// 0: boots | 1: leggings | 2: chestplate | 3: helmet
+		
 		while (j < armours.size()){
 			armours.get(j).resetPieces();
 			j++;
@@ -63,13 +90,16 @@ public class EventEquipmentSets {
 		
 		for(int i = 0; i < 4; i++) {
 			stacks = evt.player.inventory.armorItemInSlot(i);
+			
 			if(stacks != null) {
 				armor = stacks.getItem();
+				
 				j=0;
 				while (j < armours.size()){
 					if(armours.get(j).checkArmour(armor,evt)){
 						break;
 					}
+					
 					j++;
 				}
 			}
@@ -77,6 +107,13 @@ public class EventEquipmentSets {
 		// Movement Speed
 		evt.player.capabilities.setPlayerWalkSpeed(global.getSpeed());
 	}
+}
+
+class JsonModel {
+	private String name;
+	private List<String> armorPieces;
+	private List<JsonArray> effects;
+	private float speed;
 }
 
 class Armours {
@@ -137,9 +174,6 @@ class EventEquipmentGlobalVar {
 	private int potionDur = 20; // 20 ticks ~= 1 second
 	private float newPlayerSpeed = 0.1f;
 
-	// Leather, Chainmail, Iron, Gold, Diamond
-	// 5 = strength | 8 = jump boost | 11 = resistance | 12 = fire-resistance
-	//int setPotionEff[][] = {{8, 3}, {12, 3}, {11, 1}, {5, 2}, {11, 2}};
 	public float getSpeed(){
 		return this.newPlayerSpeed;
 	}

@@ -28,29 +28,23 @@ public class RealisticArmorTiers {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		log.info("PreInitializing.");
+		log.info("PreInitializing");
 		
 		proxy.preInit();
-		
-		log.info("PreInitializing DONE.");
 	}
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		log.info("Initializing.");
+		log.info("Initializing");
 		
 		proxy.init();
-		
-		log.info("Initializing DONE.");
 	}
 	
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		log.info("PostInitializing.");
+		log.info("PostInitializing");
 		
 		proxy.postInit();
-		
-		log.info("PostInitializing DONE.");
 	}
 	
 }
