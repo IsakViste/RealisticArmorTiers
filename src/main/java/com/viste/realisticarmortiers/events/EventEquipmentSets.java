@@ -2,7 +2,10 @@ package com.viste.realisticarmortiers.events;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,26 +39,55 @@ public class EventEquipmentSets {
 		this.global = new EventEquipmentGlobalVar();
 		
 		// Check if JSON file exists or copy it in
+		File configDir = new File(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.CONFIG_PATH));
 		File jsonConfig = new File(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_PATH));
-		if(!jsonConfig.exists()) {
-			log.info("Trying to copy JSON file over to config folder");
+		
+		if(!configDir.exists()) {
+			log.info("(Config Folder) Creating");
 			try {
-				FileUtils.copyFileToDirectory(new File(RealisticArmorTiers.class.getResource(Reference.ASSET_PATH).getPath()), new File(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.CONFIG_PATH)));
-			} catch (Exception e) {
-				log.fatal("Couldn't copy over the JSON file");
+				configDir.mkdir();
+			} catch (SecurityException se) {
+				log.fatal("(Config Folder) Creation Failed");
+				log.fatal(se);
 				return;
 			}
+			log.info("(Config Folder) Creation Sucess");
 		}
-		log.info("JSON file already exists");
+			
+		if(!jsonConfig.exists()) {
+			log.info("(JSON File) Copy to Config folder");
+			try {
+				jsonConfig.createNewFile();
+				
+				FileInputStream instream = new FileInputStream(this.getClass().getResource(Reference.ASSET_PATH).getPath());
+				FileOutputStream outstream = new FileOutputStream(jsonConfig);
+				
+				byte[] buffer = new byte[1024];
+				int length;
+				
+				while ((length = instream.read(buffer)) > 0) {
+					outstream.write(buffer, 0, length);
+				}
+				
+				instream.close();
+				outstream.close();
+			} catch (IOException ioe) {
+				log.fatal("(JSON File) Copy Failed");
+				log.fatal(ioe);
+				return;
+			}
+			log.info("(JSON File) Copy Success");
+		}
 		
 		// JSON File loading
 		Gson gson = new Gson();
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_PATH)));
 			Type type = new TypeToken<List<JsonModel>>(){}.getType();
-			log.info("JSON file is being loaded");
+			log.info("(JSON File) Loading");
 			List<JsonModel> models = gson.fromJson(br, type);
 			try {
+				log.info("(Armors) Loading All");
 				for(int i = 0; i < models.size(); i++) {
 					List<Effects> effects = models.get(i).effects;
 					List<ItemArmor> piecesArmors = new ArrayList<ItemArmor>();
@@ -65,49 +97,25 @@ public class EventEquipmentSets {
 							ItemArmor armor = (ItemArmor)ItemArmor.getByNameOrId(path);
 							piecesArmors.add(armor);
 						} catch (Exception e) {
-							log.fatal("Couldn't initialize a specific armor piece");
+							log.fatal("(Armor Piece) Loading Failure");
 							log.fatal(e);
 						}
 					}
 					armours.add(new Armours(global, piecesArmors, effects, models.get(i).speed));
 				}
-				log.info("All armors have been loaded!");
+				log.info("(Armors) Loading Sucess");
 			} catch (Exception e) {
-				log.fatal("Couldn't initialize all armors");
+				log.fatal("(Armors) Loading Failure");
 				log.fatal(e);
 			}
 			
-			log.info("JSON file has been loaded");
+			
 		} catch (Exception e) {
-			log.fatal("JSON file could not be loaded:");
+			log.fatal("(JSON File) Loading Failure");
 			log.fatal(e);
+			return;
 		}
-		
-		/*
-		List<ItemArmor> leather = Arrays.asList(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS);
-		List<ItemArmor> chain = Arrays.asList(Items.CHAINMAIL_HELMET, Items.CHAINMAIL_CHESTPLATE, Items.CHAINMAIL_LEGGINGS, Items.CHAINMAIL_BOOTS);
-		List<ItemArmor> iron = Arrays.asList(Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS);
-		List<ItemArmor> gold = Arrays.asList(Items.GOLDEN_HELMET, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_LEGGINGS, Items.GOLDEN_BOOTS);
-		List<ItemArmor> diamond = Arrays.asList(Items.DIAMOND_HELMET, Items.DIAMOND_CHESTPLATE, Items.DIAMOND_LEGGINGS, Items.DIAMOND_BOOTS);
-
-		//Having a JSON file to get all the data will make it more modular, but for now i don't have enough data.'
-		List<Effects> effect1 = new ArrayList<Effects>();
-		effect1.add(new Effects(8,3));
-		List<Effects> effect2 = new ArrayList<Effects>();
-		effect2.add(new Effects(12,3));
-		List<Effects> effect3 = new ArrayList<Effects>();
-		effect3.add(new Effects(11,1));
-		List<Effects> effect4 = new ArrayList<Effects>();
-		effect4.add(new Effects(5,2));
-		List<Effects> effect5 = new ArrayList<Effects>();
-		effect5.add(new Effects(11,2));
-
-		armours.add(new Armours(global, leather, effect1,    0.012f));
-		armours.add(new Armours(global, chain,   effect2,    0.008f));
-		armours.add(new Armours(global, iron,    effect3,   -0.005f));
-		armours.add(new Armours(global, gold,    effect4,   -0.0025f));
-		armours.add(new Armours(global, diamond, effect5,   -0.008f));
-		*/
+		log.info("(JSON File) Loading Sucess");
 	}
 
 	@SubscribeEvent
