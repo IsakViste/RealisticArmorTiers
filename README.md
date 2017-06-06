@@ -17,7 +17,7 @@ Support for other mods will be added at a later date.
 ---
 
 ## <a name="donwloads"></a>Downloads
-- <a href="https://github.com/IsakViste/RealisticArmorTiers/releases">Download Page</url>
+- <a href="https://github.com/IsakViste/RealisticArmorTiers/releases">Download Page</a>
 
 ---
 
