@@ -1,4 +1,4 @@
-*image*
+<img src="http://isak.viste.dk/RealisticArmorTiers/Logo.jpg" alt="Logo">
 
 ## Table of Contents
 * [Information](#information)
