@@ -19,13 +19,13 @@ Support for other mods will be added at a later date.
 ## <a name="current-features"></a>Current Features
 - [x] Worn Armor affects the players movement speed
 - [x] Wearing a full set applies potions effects depending on set
+- [x] Add a config file where you can change potion effects and speed modifiers
+- [x] Add support for other mods that add in armor
 
 ---
 
 ## <a name="planned-features"></a>Planned Features
 **General**
 - [ ] Balance the mod
-- [ ] Add a config file where you can change potion effects and speed modifiers
-- [ ] Add support for other mods that add in armor
 
 ---
