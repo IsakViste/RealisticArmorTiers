@@ -2,15 +2,14 @@ package com.viste.realisticarmortiers.events;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,7 +58,7 @@ public class EventEquipmentSets {
 			try {
 				jsonConfig.createNewFile();
 				
-				FileInputStream instream = new FileInputStream(this.getClass().getResource(Reference.ASSET_PATH).getPath());
+				InputStream instream = this.getClass().getResourceAsStream(Reference.ASSET_PATH);
 				FileOutputStream outstream = new FileOutputStream(jsonConfig);
 				
 				byte[] buffer = new byte[1024];
