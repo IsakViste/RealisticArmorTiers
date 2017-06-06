@@ -17,7 +17,8 @@ Support for other mods will be added at a later date.
 ---
 
 ## <a name="donwloads"></a>Downloads
-- <a href="https://github.com/IsakViste/RealisticArmorTiers/releases">Download Page</a>
+- <a href="https://minecraft.curseforge.com/projects/realistic-armor-tiers">CurseForge Page</a>
+- <a href="https://github.com/IsakViste/RealisticArmorTiers/releases">Github Download</a>
 
 ---
 
