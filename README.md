@@ -38,9 +38,9 @@ Support for other mods has been added and should be working.
 ---
 
 ## <a name="links"></a>Links
-- <a href="https://minecraft.curseforge.com/projects/realistic-armor-tiers">CurseForge Page</a>
-- <a href="https://mods.curse.com/mc-mods/minecraft/269272-realistic-armor-tiers">CurseMods Page</a>
-- <a href="http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2827551-realistic-armor-tiers">MinecraftForum Page</a>
-- <a href="https://www.planetminecraft.com/mod/realistic-armor-tiers/">PlanetMinecraft Page</a>
+- <a href="https://minecraft.curseforge.com/projects/realistic-armor-tiers">CurseForge</a>
+- <a href="https://mods.curse.com/mc-mods/minecraft/269272-realistic-armor-tiers">CurseMods</a>
+- <a href="http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/2827551-realistic-armor-tiers">MinecraftForum</a>
+- <a href="https://www.planetminecraft.com/mod/realistic-armor-tiers/">PlanetMinecraft</a>
 
 ---
