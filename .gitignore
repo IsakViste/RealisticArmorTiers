@@ -14,8 +14,8 @@ out
 .idea
 
 # gradle
-build
-!build/libs
+build/*
+!build/libs/
 .gradle
 
 # other
