@@ -2,16 +2,19 @@ package com.viste.realisticarmortiers.events;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.viste.realisticarmortiers.RealisticArmorTiers;
 import com.viste.realisticarmortiers.Reference;
@@ -41,13 +44,37 @@ public class EventEquipmentSets {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(RealisticArmorTiers.class.getResource(Reference.ASSET_PATH).getPath()));
 			Type type = new TypeToken<List<JsonModel>>(){}.getType();
-			log.info("JSON file has been loaded");
+			log.info("JSON file is being loaded");
 			List<JsonModel> models = gson.fromJson(br, type);
+			try {
+				for(int i = 0; i < models.size(); i++) {
+					List<Effects> effects = models.get(i).effects;
+					List<ItemArmor> piecesArmors = new ArrayList<ItemArmor>();
+					for(int j = 0; j < 4; j++) {
+						try {
+							String path = models.get(i).modId + ":" + models.get(i).pieces.get(j).toLowerCase();
+							ItemArmor armor = (ItemArmor)ItemArmor.getByNameOrId(path);
+							piecesArmors.add(armor);
+						} catch (Exception e) {
+							log.fatal("Couldn't initialize a specific armor piece");
+							log.fatal(e);
+						}
+					}
+					armours.add(new Armours(global, piecesArmors, effects, models.get(i).speed));
+				}
+				log.info("All armors have been loaded!");
+			} catch (Exception e) {
+				log.fatal("Couldn't initialize all armors");
+				log.fatal(e);
+			}
+			
+			log.info("JSON file has been loaded");
 		} catch (Exception e) {
 			log.fatal("JSON file could not be loaded:");
 			log.fatal(e);
 		}
 		
+		/*
 		List<ItemArmor> leather = Arrays.asList(Items.LEATHER_HELMET, Items.LEATHER_CHESTPLATE, Items.LEATHER_LEGGINGS, Items.LEATHER_BOOTS);
 		List<ItemArmor> chain = Arrays.asList(Items.CHAINMAIL_HELMET, Items.CHAINMAIL_CHESTPLATE, Items.CHAINMAIL_LEGGINGS, Items.CHAINMAIL_BOOTS);
 		List<ItemArmor> iron = Arrays.asList(Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS);
@@ -71,6 +98,7 @@ public class EventEquipmentSets {
 		armours.add(new Armours(global, iron,    effect3,   -0.005f));
 		armours.add(new Armours(global, gold,    effect4,   -0.0025f));
 		armours.add(new Armours(global, diamond, effect5,   -0.008f));
+		*/
 	}
 
 	@SubscribeEvent
@@ -107,13 +135,6 @@ public class EventEquipmentSets {
 		// Movement Speed
 		evt.player.capabilities.setPlayerWalkSpeed(global.getSpeed());
 	}
-}
-
-class JsonModel {
-	private String name;
-	private List<String> armorPieces;
-	private List<JsonArray> effects;
-	private float speed;
 }
 
 class Armours {
@@ -154,18 +175,35 @@ class Armours {
 		if(this.isFullSet()){
 			int i = 0;
 			while (i < effects.size()){
-				evt.player.addPotionEffect(new PotionEffect(Potion.getPotionById(effects.get(i).effect), global.getPotionDur(), effects.get(i).efficiency));
+				evt.player.addPotionEffect(new PotionEffect(Potion.getPotionById(effects.get(i).potion_effect), global.getPotionDur(), effects.get(i).efficiency - 1));
 				i++;
 			}
 		}
 	}
 }
 
+class JsonModel {
+	public String name;
+	public String modId;
+	public List<String> pieces;
+	public List<Effects> effects;
+	public float speed;
+	
+	public JsonModel(String name, String modId, List<String> pieces, List<Effects> effects, float speed) {
+		this.name = name;
+		this.modId = modId;
+		this.pieces = pieces;
+		this.effects = effects;
+		this.speed = speed;
+	}
+}
+
 class Effects {
-	public int effect;
+	public int potion_effect;
 	public int efficiency;
-	public Effects(int effect, int efficiency){
-		this.effect = effect;
+	
+	public Effects(int potion_effect, int efficiency){
+		this.potion_effect = potion_effect;
 		this.efficiency = efficiency;
 	}
 }
