@@ -2,6 +2,7 @@
 
 ## Table of Contents
 * [Information](#information)
+* [Downloads](#downloads)
 * [Current Features](#current-features)
 * [Planned Features](#planned-features)
 
@@ -15,7 +16,7 @@ Support for other mods has been added and should be working.
 
 ---
 
-## <a name="donwloads"></a>Downloads
+## <a name="downloads"></a>Downloads
 - <a href="https://minecraft.curseforge.com/projects/realistic-armor-tiers">CurseForge Page</a>
 - <a href="https://github.com/IsakViste/RealisticArmorTiers/releases">Github Download</a>
 
