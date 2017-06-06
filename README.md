@@ -16,6 +16,9 @@ Support for other mods has been added and should be working.
 ---
 
 ## <a name="donwloads"></a>Downloads
+
+<iframe src="https://widget.mcf.li/mc-mods/minecraft/269272-realistic-armor-tiers" width="100%" style="border: none;"></iframe>
+
 - <a href="https://minecraft.curseforge.com/projects/realistic-armor-tiers">CurseForge Page</a>
 - <a href="https://github.com/IsakViste/RealisticArmorTiers/releases">Github Download</a>
 
