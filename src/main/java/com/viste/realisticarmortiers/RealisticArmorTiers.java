@@ -18,6 +18,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid=Reference.MODID, name=Reference.NAME, version=Reference.VERSION)
 public class RealisticArmorTiers {
 	
+	public File configFile = null;
+	
 	private static final Logger log = LogManager.getLogger(Reference.MODID);
 	
 	@Instance(Reference.MODID)
@@ -29,6 +31,7 @@ public class RealisticArmorTiers {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		log.info("PreInitializing");
+		configFile = event.getModConfigurationDirectory();
 		
 		proxy.preInit();
 	}

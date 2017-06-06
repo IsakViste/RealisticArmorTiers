@@ -11,5 +11,6 @@ public class Reference {
 	
 	public static final String JSON_FILE = "equipment_list.json";
 	public static final String ASSET_PATH = "/assets/" + MODID + "/" + JSON_FILE;
-	public static final String CONFIG_PATH = "/RealisticArmorTiers/" + JSON_FILE;
+	public static final String CONFIG_PATH = "/RealisticArmorTiers/";
+	public static final String JSON_CONFIG_PATH = CONFIG_PATH + JSON_FILE;
 }

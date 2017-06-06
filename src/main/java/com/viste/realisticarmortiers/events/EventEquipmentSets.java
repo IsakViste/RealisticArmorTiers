@@ -1,25 +1,21 @@
 package com.viste.realisticarmortiers.events;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import com.viste.realisticarmortiers.RealisticArmorTiers;
 import com.viste.realisticarmortiers.Reference;
 
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -39,10 +35,23 @@ public class EventEquipmentSets {
 		
 		this.global = new EventEquipmentGlobalVar();
 		
-		Gson gson = new Gson();
+		// Check if JSON file exists or copy it in
+		File jsonConfig = new File(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_PATH));
+		if(!jsonConfig.exists()) {
+			log.info("Trying to copy JSON file over to config folder");
+			try {
+				FileUtils.copyFileToDirectory(new File(RealisticArmorTiers.class.getResource(Reference.ASSET_PATH).getPath()), new File(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.CONFIG_PATH)));
+			} catch (Exception e) {
+				log.fatal("Couldn't copy over the JSON file");
+				return;
+			}
+		}
+		log.info("JSON file already exists");
 		
+		// JSON File loading
+		Gson gson = new Gson();
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(RealisticArmorTiers.class.getResource(Reference.ASSET_PATH).getPath()));
+			BufferedReader br = new BufferedReader(new FileReader(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_PATH)));
 			Type type = new TypeToken<List<JsonModel>>(){}.getType();
 			log.info("JSON file is being loaded");
 			List<JsonModel> models = gson.fromJson(br, type);
