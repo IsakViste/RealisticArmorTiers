@@ -16,6 +16,11 @@ Support for other mods will be added at a later date.
 
 ---
 
+## <a name="donwloads"></a>Downloads
+- <url="https://github.com/IsakViste/RealisticArmorTiers/releases">Download Page</url>
+
+---
+
 ## <a name="current-features"></a>Current Features
 - [x] Worn Armor affects the players movement speed
 - [x] Wearing a full set applies potions effects depending on set
