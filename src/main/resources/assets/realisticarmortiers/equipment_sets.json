@@ -1,0 +1,106 @@
+[
+  {
+    set: "LEATHER",
+    modId: "minecraft",
+    pieces: [
+      "LEATHER_HELMET",
+      "LEATHER_CHESTPLATE",
+      "LEATHER_LEGGINGS",
+      "LEATHER_BOOTS"
+    ],
+    effects: [
+      {
+        potion_effect: 8,
+        efficiency: 3
+      },
+      {
+        potion_effect: 13,
+        efficiency: 1
+      },
+      {
+        potion_effect: 16,
+        efficiency: 1
+      }
+    ]
+  },
+  {
+    set: "MAIL",
+    modId: "minecraft",
+    pieces: [
+      "CHAINMAIL_HELMET",
+      "CHAINMAIL_CHESTPLATE",
+      "CHAINMAIL_LEGGINGS",
+      "CHAINMAIL_BOOTS"
+    ],
+    effects: [
+      {
+        potion_effect: 12,
+        efficiency: 3
+      },
+      {
+        potion_effect: 5,
+        efficiency: 1
+      }
+    ]
+  },
+  {
+    set: "PLATE",
+    modId: "minecraft",
+    pieces: [
+      "IRON_HELMET",
+      "IRON_CHESTPLATE",
+      "IRON_LEGGINGS",
+      "IRON_BOOTS"
+    ],
+    effects: [
+      {
+        potion_effect: 11,
+        efficiency: 2
+      },
+      {
+        potion_effect: 12,
+        efficiency: 1
+      }
+    ]
+  },
+  {
+    set: "MAIL",
+    modId: "minecraft",
+    pieces: [
+      "GOLDEN_HELMET",
+      "GOLDEN_CHESTPLATE",
+      "GOLDEN_LEGGINGS",
+      "GOLDEN_BOOTS"
+    ],
+    effects: [
+      {
+        potion_effect: 5,
+        efficiency: 2
+      },
+      {
+        potion_effect: 3,
+        efficiency: 1
+      }
+    ]
+  },
+  {
+    set: "PLATE",
+    modId: "minecraft",
+    pieces: [
+      "DIAMOND_HELMET",
+      "DIAMOND_CHESTPLATE",
+      "DIAMOND_LEGGINGS",
+      "DIAMOND_BOOTS"
+    ],
+    effects: [
+      {
+        potion_effect: 11,
+        efficiency: 3
+      },
+      {
+        potion_effect: 15,
+        efficiency: 1
+      }
+    ]
+  }
+]

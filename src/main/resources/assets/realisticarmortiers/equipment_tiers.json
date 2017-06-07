@@ -1,0 +1,22 @@
+[
+  {
+    set: "CLOTH",
+    weight: 1,
+    speed: 0.006
+  },
+  {
+    set: "LEATHER",
+    weight: 2,
+    speed: 0.003
+  },
+  {
+    set: "MAIL",
+    weight: 4,
+    speed: -0.003
+  },
+  {
+    set: "PLATE",
+    weight: 8,
+    speed: -0.006
+  }
+]
