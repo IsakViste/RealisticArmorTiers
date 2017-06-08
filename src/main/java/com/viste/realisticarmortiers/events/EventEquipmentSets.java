@@ -70,17 +70,17 @@ public class EventEquipmentSets {
 			
 			log.info("-> (File Read) Reading JSON files");
 			try {
+				Gson gson = new Gson();
+				
 				// Tiers
-				Gson gsonTiers = new Gson();
 				BufferedReader brTiers = new BufferedReader(new FileReader(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_TIERS_PATH)));
 				Type typeTiers = new TypeToken<List<Tiers>>(){}.getType();
-				tiers = gsonTiers.fromJson(brTiers, typeTiers);
+				tiers = gson.fromJson(brTiers, typeTiers);
 				
 				// Sets
-				Gson gsonSets = new Gson();
 				BufferedReader brSets = new BufferedReader(new FileReader(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_SETS_PATH)));
 				Type typeSets = new TypeToken<List<Sets>>(){}.getType();
-				sets = gsonSets.fromJson(brSets, typeSets);
+				sets = gson.fromJson(brSets, typeSets);
 			} catch (IOException ioe) {
 				log.fatal("-> (File Read) Reading Failure");
 				log.fatal(ioe);
@@ -108,7 +108,7 @@ public class EventEquipmentSets {
 					
 					List<Effects> effects = sets.get(i).effects;
 					List<ItemArmor> piecesArmors = new ArrayList<ItemArmor>();
-					for(int j = 0; j < 4; j++) {
+					for(int j = 0; j < sets.get(i).pieces.size(); j++) {
 						String path = sets.get(i).modId + ":" + sets.get(i).pieces.get(j).toLowerCase();
 						ItemArmor armor = (ItemArmor)ItemArmor.getByNameOrId(path);
 						if(armor == null) {
