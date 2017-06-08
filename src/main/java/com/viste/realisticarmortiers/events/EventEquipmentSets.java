@@ -201,6 +201,7 @@ public class EventEquipmentSets {
 class Armors {
 	private List<ItemArmor> armors = null;
 	private int armorPieces = 0;
+	private int armorPiecesLength = 0;
 	private List<Effects> effects;
 	private EventEquipmentGlobalVar global;
 	private float speed = 0;
@@ -209,6 +210,7 @@ class Armors {
 		this.global = global;
 		this.speed = speed;
 		this.armors = items;
+		this.armorPiecesLength = items.size();
 		this.effects = effects;
 	}
 	
@@ -223,7 +225,7 @@ class Armors {
 	}
 
 	public boolean isFullSet(){
-		if(this.armorPieces >= 4){
+		if(this.armorPieces >= this.armorPiecesLength){
 			return true;
 		}
 		return false;
