@@ -5,11 +5,11 @@
   "description": "Makes low-tier armor more interesting and high-tier armor less op.",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://github.com/IsakViste/RealisticArmorTiers",
   "updateUrl": "",
   "authorList": ["Mentits", "PocketStealer"],
   "credits": "The Forge and FML guys",
-  "logoFile": "",
+  "logoFile": "http://isak.viste.dk/RealisticArmorTiers/Logo.jpg",
   "screenshots": [],
   "dependencies": []
 }
