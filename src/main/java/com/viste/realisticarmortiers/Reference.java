@@ -9,7 +9,7 @@ public class Reference {
 	public static final String CLIENT_PROXY = "com.viste.realisticarmortiers.proxy.ClientProxy";
 	public static final String SERVER_PROXY = "com.viste.realisticarmortiers.proxy.CommonProxy";
 	
-	public static final String CONFIG_PATH = "/viste/" + MODID;
+	public static final String CONFIG_PATH = "/" + MODID + "/";
 	
 	public static final String JSON_TIERS_FILE = "equipment_tiers.json";
 	public static final String ASSET_TIERS_PATH = "/assets/" + MODID + "/" + JSON_TIERS_FILE;	
