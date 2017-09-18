@@ -109,7 +109,7 @@ public class EventEquipmentSets {
 					List<Effects> effects = sets.get(i).effects;
 					List<ItemArmor> piecesArmors = new ArrayList<ItemArmor>();
 					for(int j = 0; j < sets.get(i).pieces.size(); j++) {
-						String path = sets.get(i).modId + ":" + sets.get(i).pieces.get(j).toLowerCase();
+						String path = sets.get(i).modId + ":" + sets.get(i).pieces.get(j);
 						ItemArmor armor = (ItemArmor)ItemArmor.getByNameOrId(path);
 						if(armor == null) {
 							log.warn("-> -> (Armor Piece) " + sets.get(i).pieces.get(j) + " was not found!");

@@ -3,10 +3,10 @@
     set: "LEATHER",
     modId: "minecraft",
     pieces: [
-      "LEATHER_HELMET",
-      "LEATHER_CHESTPLATE",
-      "LEATHER_LEGGINGS",
-      "LEATHER_BOOTS"
+      "leather_helmet",
+      "leather_chestplate",
+      "leather_leggings",
+      "leather_boots"
     ],
     effects: [
       {
@@ -27,10 +27,10 @@
     set: "MAIL",
     modId: "minecraft",
     pieces: [
-      "CHAINMAIL_HELMET",
-      "CHAINMAIL_CHESTPLATE",
-      "CHAINMAIL_LEGGINGS",
-      "CHAINMAIL_BOOTS"
+      "chainmail_helmet",
+      "chainmail_chestplate",
+      "chainmail_leggings",
+      "chainmail_boots"
     ],
     effects: [
       {
@@ -47,10 +47,10 @@
     set: "PLATE",
     modId: "minecraft",
     pieces: [
-      "IRON_HELMET",
-      "IRON_CHESTPLATE",
-      "IRON_LEGGINGS",
-      "IRON_BOOTS"
+      "iron_helmet",
+      "iron_chestplate",
+      "iron_leggings",
+      "iron_boots"
     ],
     effects: [
       {
@@ -67,10 +67,10 @@
     set: "MAIL",
     modId: "minecraft",
     pieces: [
-      "GOLDEN_HELMET",
-      "GOLDEN_CHESTPLATE",
-      "GOLDEN_LEGGINGS",
-      "GOLDEN_BOOTS"
+      "golden_helmet",
+      "golden_chestplate",
+      "golden_leggings",
+      "golden_boots"
     ],
     effects: [
       {
@@ -87,10 +87,10 @@
     set: "PLATE",
     modId: "minecraft",
     pieces: [
-      "DIAMOND_HELMET",
-      "DIAMOND_CHESTPLATE",
-      "DIAMOND_LEGGINGS",
-      "DIAMOND_BOOTS"
+      "diamond_helmet",
+      "diamond_chestplate",
+      "diamond_leggings",
+      "diamond_boots"
     ],
     effects: [
       {
