@@ -46,7 +46,7 @@ public class EventEquipmentSets {
 		if(!configDir.exists()) {
 			log.info("(Config Folder) Creating " + Reference.CONFIG_PATH);
 			try {
-				configDir.mkdir();
+				configDir.mkdirs();
 			} catch (SecurityException se) {
 				log.fatal("(Config Folder) Creation Failed");
 				log.fatal(se);
