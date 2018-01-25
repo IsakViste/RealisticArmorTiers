@@ -10,7 +10,7 @@
 ---
 
 ## <a name="information"></a>Information
-Realistic Armor Tiers is a minecraft 1.10.2 mod, making wear armor feel more RPG-like.
+Realistic Armor Tiers is a minecraft 1.12.2 mod, making wear armor feel more RPG-like.
 The different armor types modifies the players speed when worn, leather will make you run slightly faster, while diamond makes you slightly slower.
 Wearing full sets will apply different amplitudes of potion effects for as long as the player wears the full armor. Everything if fully customisable from the armor affected, to the speed modifiers, to the potion effects and their amplitude when wearing a full set.
 Support for other mods has been added and should be working.
