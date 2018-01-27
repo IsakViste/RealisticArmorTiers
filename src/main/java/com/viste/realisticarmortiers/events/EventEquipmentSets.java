@@ -81,6 +81,7 @@ public class EventEquipmentSets {
 				BufferedReader brSets = new BufferedReader(new FileReader(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_SETS_PATH)));
 				Type typeSets = new TypeToken<List<Sets>>(){}.getType();
 				sets = gson.fromJson(brSets, typeSets);
+				
 			} catch (IOException ioe) {
 				log.fatal("-> (File Read) Reading Failure");
 				log.fatal(ioe);
@@ -94,22 +95,27 @@ public class EventEquipmentSets {
 				for(int i = 0; i < sets.size(); i++) {
 					float speed = 0;
 					boolean found = false;
-					for(int j = 0; j < tiers.size(); j++) {
-						if(sets.get(i).set.contentEquals(tiers.get(j).set)) {
-							speed = tiers.get(j).speed;
-							found = true;
-							break;
-						}
-					}
-					
-					if(found == false) {
-						log.warn("-> -> (Armor Set) " + sets.get(i).set + " was not found in " + Reference.JSON_TIERS_FILE);
-					}
 					
 					List<Effects> effects = sets.get(i).effects;
 					List<ItemArmor> piecesArmors = new ArrayList<ItemArmor>();
 					for(int j = 0; j < sets.get(i).pieces.size(); j++) {
-						String path = sets.get(i).modId + ":" + sets.get(i).pieces.get(j);
+						// Tiers
+						for(int k = 0; k < tiers.size(); k++) {
+							for(int l = 0; l < tiers.get(k).pieces.size(); l++) {
+								if(sets.get(i).pieces.get(j).contentEquals(tiers.get(k).pieces.get(l))) {
+									speed = tiers.get(k).speed;
+									found = true;
+									break;
+								}
+							}
+						}
+						
+						if(found == false) {
+							log.warn("-> -> (Armor Set) " + sets.get(i).pieces.get(j) + " could not find a set in " + Reference.JSON_TIERS_FILE);
+						}
+						
+						// Add pieces to Armor
+						String path = sets.get(i).pieces.get(j);
 						ItemArmor armor = (ItemArmor)ItemArmor.getByNameOrId(path);
 						if(armor == null) {
 							log.warn("-> -> (Armor Piece) " + path + " was not found!");
@@ -198,6 +204,7 @@ public class EventEquipmentSets {
 	}
 }
 
+// ARMORS
 class Armors {
 	private List<ItemArmor> armors = null;
 	private int armorPieces = 0;
@@ -246,15 +253,25 @@ class Armors {
 	}
 }
 
-class Sets {
+// TIERS
+class Tiers {
 	public String set;
-	public String modId;
+	public float speed;
+	public List<String> pieces;
+	
+	public Tiers(String set, float speed, List<String> pieces) {
+		this.set = set;
+		this.speed = speed;
+		this.pieces = pieces;
+	}
+}
+
+// SETS & EFFECTS
+class Sets {
 	public List<String> pieces;
 	public List<Effects> effects;
 	
-	public Sets(String set, String modId, List<String> pieces, List<Effects> effects) {
-		this.set = set;
-		this.modId = modId;
+	public Sets(List<String> pieces, List<Effects> effects) {
 		this.pieces = pieces;
 		this.effects = effects;
 	}
@@ -270,18 +287,7 @@ class Effects {
 	}
 }
 
-class Tiers {
-	public String set;
-	public int weight;
-	public float speed;
-	
-	public Tiers(String set, int weight, float speed) {
-		this.set = set;
-		this.weight = weight;
-		this.speed = speed;
-	}
-}
-
+// GLOBAL VARIABLES
 class EventEquipmentGlobalVar {
 	private int maxPotions = 28; // Amount of potions + 1
 	private int potionDur = 20; // 20 ticks ~= 1 second

@@ -5,7 +5,7 @@ public class Reference {
 	public static final String MODID = "realisticarmortiers";
 	public static final String NAME = "Realistic Armor Tiers";
 	public static final String SHORT_NAME = "ArmorTiers";
-	public static final String VERSION = "1.0.4";
+	public static final String VERSION = "1.1.0";
 	
 	public static final String CLIENT_PROXY = "com.viste.realisticarmortiers.proxy.ClientProxy";
 	public static final String SERVER_PROXY = "com.viste.realisticarmortiers.proxy.CommonProxy";
@@ -20,4 +20,5 @@ public class Reference {
 	public static final String JSON_SETS_FILE = "equipment_sets.json";
 	public static final String ASSET_SETS_PATH = "/assets/" + MODID + "/" + JSON_SETS_FILE;
 	public static final String JSON_CONFIG_SETS_PATH = CONFIG_PATH + JSON_SETS_FILE;
+	
 }
