@@ -34,6 +34,9 @@ Support for other mods has been added and should be working.
 ## <a name="planned-features"></a>Planned Features
 **General**
 - [ ] Balance the mod
+- [ ] Include main-hand and off-hand items in sets
+- [ ] Cross-mod behaviour with <a href="https://github.com/IsakViste/RealisticWeightModifiers">RWM</a>
+- [ ] Make tiers composed of different slots and let sets use tier slot instead of specific item
 
 ---
 
