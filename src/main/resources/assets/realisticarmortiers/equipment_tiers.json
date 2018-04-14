@@ -1,74 +1,18 @@
 [
-  {
-    set: "CLOTH",
-    speed: 0.006,
-    helmet: [
-      
-    ],
-    chestplate: [
-      
-    ],
-    leggings: [
-      
-    ],
-    boots: [
-      
-    ]
-  },
-  {
-    set: "LEATHER",
-    speed: 0.003,
-    helmet: [
+{
+  "name": "Leather",
+  "speed": 0.006,
+  "helmet": [
       "minecraft:leather_helmet"
-    ],
-    chestplate: [
-      "minecraft:leather_chestplate"
-    ],
-    leggings: [
-      "minecraft:leather_leggings"
-    ],
-    boots: [
-      "minecraft:leather_boots"
-    ]
-  },
-  {
-    set: "MAIL",
-    speed: -0.003,
-    helmet: [
-      "minecraft:chainmail_helmet",
-      "minecraft:golden_helmet"
-    ],
-    chestplate: [
-      "minecraft:chainmail_chestplate",
-      "minecraft:golden_chestplate"
-    ],
-    leggings: [
-      "minecraft:chainmail_leggings",
-      "minecraft:golden_leggings"
-    ],
-    boots: [
-      "minecraft:chainmail_boots",
-      "minecraft:golden_boots"
-    ]
-  },
-  {
-    set: "PLATE",
-    speed: -0.006,
-    helmet: [
-      "minecraft:iron_helmet",
-      "minecraft:diamond_helmet"
-    ],
-    chestplate: [
-      "minecraft:iron_chestplate",
-      "minecraft:diamond_chestplate"
-    ],
-    leggings: [
-      "minecraft:iron_leggings",
-      "minecraft:diamond_leggings"
-    ],
-    boots: [
-      "minecraft:iron_boots",
-      "minecraft:diamond_boots"
-    ]
-  }
+  ],
+  "chest": [
+    "minecraft:leather_chestplate"
+  ],
+  "leggings": [
+    "minecraft:leather_leggings"
+  ],
+  "boots": [
+    "minecraft:leather_boots"
+  ]
+}
 ]

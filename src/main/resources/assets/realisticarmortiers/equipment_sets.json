@@ -1,91 +1,23 @@
 [
-  {
-    name: "Standard Leather Set",
-    helmet: "minecraft:leather_helmet",
-    chestplate: "minecraft:leather_chestplate",
-    leggings: "minecraft:leather_leggings",
-    boots: "minecraft:leather_boots",
-    effects: [
-      {
-        potion_effect: 8,
-        efficiency: 3
-      },
-      {
-        potion_effect: 13,
-        efficiency: 1
-      },
-      {
-        potion_effect: 16,
-        efficiency: 1
-      }
-    ]
-  },
-  {
-    name: "Standard Chain Set",
-    helmet: "minecraft:chainmail_helmet",
-    chestplate: "minecraft:chainmail_chestplate",
-    leggings: "minecraft:chainmail_leggings",
-    boots: "minecraft:chainmail_boots",
-    effects: [
-      {
-        potion_effect: 12,
-        efficiency: 3
-      },
-      {
-        potion_effect: 5,
-        efficiency: 1
-      }
-    ]
-  },
-  {
-    name: "Standard Iron Set",
-    helmet: "minecraft:iron_helmet",
-    chestplate: "minecraft:iron_chestplate",
-    leggings: "minecraft:iron_leggings",
-    boots: "minecraft:iron_boots",
-    effects: [
-      {
-        potion_effect: 11,
-        efficiency: 2
-      },
-      {
-        potion_effect: 12,
-        efficiency: 1
-      }
-    ]
-  },
-  {
-    name: "Standard Gold Set",
-    helmet: "minecraft:golden_helmet",
-    chestplate: "minecraft:golden_chestplate",
-    leggings: "minecraft:golden_leggings",
-    boots: "minecraft:golden_boots",
-    effects: [
-      {
-        potion_effect: 5,
-        efficiency: 2
-      },
-      {
-        potion_effect: 3,
-        efficiency: 1
-      }
-    ]
-  },
-  {
-    name: "Standard Diamond Set",
-    helmet: "minecraft:diamond_helmet",
-    chestplate: "minecraft:diamond_chestplate",
-    leggings: "minecraft:diamond_leggings",
-    boots: "minecraft:diamond_boots",
-    effects: [
-      {
-        potion_effect: 11,
-        efficiency: 3
-      },
-      {
-        potion_effect: 15,
-        efficiency: 1
-      }
-    ]
-  }
+{
+  "name": "Rogue Tier 1",
+  "helmet": "Leather",
+  "chest": "minecraft:leather_chestplate",
+  "leggings": "Leather",
+  "boots": "minecraft:leather_boots",
+  "potion": [
+    {
+      "effect": 8,
+      "efficiency": 3
+    },
+    {
+      "effect": 13,
+      "efficiency": 1
+    },
+    {
+      "effect": 16,
+      "efficiency": 1
+    }
+  ]
+}
 ]
