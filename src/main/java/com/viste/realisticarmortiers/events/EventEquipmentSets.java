@@ -73,8 +73,9 @@ public class EventEquipmentSets {
 					armors.setSpeed(sets.global.getSpeed());
 					stacks = (List<ItemStack>)player.getArmorInventoryList();
 					for(int k = 0; k < stacks.size(); k++) {
+						ItemStack x = stacks.get(i).copy();
 						if(stacks != null) {
-							armors.addItem(stacks.get(k));
+							armors.addItem(x);
 						}
 					}
 				}
