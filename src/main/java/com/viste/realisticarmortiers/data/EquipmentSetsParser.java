@@ -134,8 +134,8 @@ public class EquipmentSetsParser {
 					chestplate = makeItemArmorListFromStringList(tiersJson.get(j).chestplate);
 					leggings = makeItemArmorListFromStringList(tiersJson.get(j).leggings);
 					boots = makeItemArmorListFromStringList(tiersJson.get(j).boots);
-					Armor armor = new Armor(global, new Sets(sets.get(j).name, helmet, chestplate, leggings, boots), null, tiersJson.get(j).speed);
-					tiers.addTier(armor);
+					Tier tier = new Tier(global, new Sets(sets.get(j).name, helmet, chestplate, leggings, boots), tiersJson.get(j).speed);
+					tiers.addTier(tier);
 				}
 				log.info("-> (Armors) Loading Success");
 				System.out.println(armors);

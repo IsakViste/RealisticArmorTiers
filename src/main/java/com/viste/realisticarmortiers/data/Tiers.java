@@ -5,20 +5,18 @@ import java.util.List;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 
-public class Tiers {
-	
-	private List<Armor> armors = new ArrayList<Armor>();
+public class Tiers {	
+	private List<Tier> tiers = new ArrayList<Tier>();
 		
 	public float checkIfTier(EntityPlayerMP player) {
-		for(int i = 0; i < armors.size(); i++) {
-			if(armors.get(i).isFullSet(player)) {
-				return armors.get(i).getSpeed();
-			}
+		float speed = 0;
+		for(int i = 0; i < tiers.size(); i++) {
+			speed = speed + tiers.get(i).getSpeed(player);
 		}
-		return -1;
+		return speed;
 	}
 	
-	public void addTier(Armor armor) {
-		this.armors.add(armor);
+	public void addTier(Tier tier) {
+		this.tiers.add(tier);
 	}
 }

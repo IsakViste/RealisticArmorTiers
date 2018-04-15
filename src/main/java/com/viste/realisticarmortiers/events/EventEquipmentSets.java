@@ -4,15 +4,18 @@ package com.viste.realisticarmortiers.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.Lists;
+import com.viste.realisticarmortiers.Reference;
 import com.viste.realisticarmortiers.capability.ArmorProvider;
 import com.viste.realisticarmortiers.capability.IArmor;
 import com.viste.realisticarmortiers.data.EquipmentSetsParser;
 import com.viste.realisticarmortiers.data.Potion;
 import com.viste.realisticarmortiers.logic.Equiped;
 
+import jline.internal.Log;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -23,6 +26,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 public class EventEquipmentSets {	
 	private MinecraftServer server;
 	private EquipmentSetsParser sets;
+	private static final Logger log = LogManager.getLogger(Reference.MODID);
 	public EventEquipmentSets() {
 		sets = new EquipmentSetsParser();
 
@@ -40,7 +44,7 @@ public class EventEquipmentSets {
 		boolean found = false;
 		float speed;
 		for(int i=0; i < list.size(); i++) {
-			speed = 0.1f;
+			speed = sets.global.getSpeed();
 			EntityPlayerMP player = list.get(i);
 			List <ItemStack> stacks = null;
 						
@@ -85,17 +89,15 @@ public class EventEquipmentSets {
 					potionsEffects = sets.armors.getPotions(setNumber);
 				}
 				
-				speed = sets.tiers.checkIfTier(player);
-				if(speed == 0) {
-					speed = sets.global.getSpeed();
+				speed = speed + sets.tiers.checkIfTier(player);
+				if(speed < 0) {
+					speed = 0;
 				}
 				if(player.hasCapability(ArmorProvider.Armor, null)) {
 					if(potionsEffects != null) {
 						armors.addPotionEffectList(potionsEffects);
 					}
-					if(speed > 0) {
-						armors.setSpeed(speed);
-					} 
+					armors.setSpeed(speed);
 				}
 			} else {
 				potionsEffects = armors.getPotionEffect();
@@ -108,7 +110,8 @@ public class EventEquipmentSets {
 					m++;
 				}
 			}
-			if(speed > 0 && speed != player.capabilities.getWalkSpeed()) {
+			if(speed != player.capabilities.getWalkSpeed()) {
+				log.info(speed);
 				player.capabilities.setPlayerWalkSpeed(speed);
 			}
 			
