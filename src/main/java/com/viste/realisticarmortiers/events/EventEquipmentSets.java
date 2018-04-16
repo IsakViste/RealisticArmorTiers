@@ -44,44 +44,63 @@ public class EventEquipmentSets {
 		boolean found = false;
 		float speed;
 		for(int i=0; i < list.size(); i++) {
+			int m;
 			speed = sets.global.getSpeed();
 			EntityPlayerMP player = list.get(i);
 			List <ItemStack> stacks = null;
 						
 			if(player.hasCapability(ArmorProvider.Armor, null)) {
-				armors = player.getCapability(ArmorProvider.Armor, null);
-				
+				armors = player.getCapability(ArmorProvider.Armor, null);				
 				if(armors != null && armors.getItems().size() > 0) {
 					stacks = (List<ItemStack>) player.getArmorInventoryList();
-					if(stacks.size() == armors.getItems().size()) {
+					int numberOfStack = 0;
+					for(int k=0; k < stacks.size(); k++) {
+						if(!stacks.get(k).isEmpty()) {
+							numberOfStack++;
+						}
+					}
+					if(numberOfStack == armors.getItems().size()) {
 						foundWhole = true;
 						for(int k=0; k < stacks.size(); k++) {
 							found = false;
-							for(int l=0; l < armors.getItems().size(); l++)	{
-								if(stacks.get(k) == armors.getItems().get(l)) {
-									found = true;
+							if(!stacks.get(k).isEmpty()) {
+								for(int l=0; l < armors.getItems().size(); l++)	{
+									if(stacks.get(k).getItem().equals(armors.getItems().get(l).getItem())) {
+										found = true;
+										break;
+									}
+								}
+								if(found == false) {
+									foundWhole = false;
 									break;
 								}
 							}
-							if(found == false) {
-								foundWhole = false;
-								break;
-							}
 						}
 					}
-				}				
+				}
 			}
-			if(!foundWhole) {
+			if(!foundWhole) {				
 				if(player.hasCapability(ArmorProvider.Armor, null)) {
+					m = 0;
+					potionsEffects = armors.getPotionEffect();
+					
+					while(m < potionsEffects.size()) {
+						player.removePotionEffect((net.minecraft.potion.Potion.getPotionById(potionsEffects.get(m).effect)));
+						m++;
+					}
 					armors.removeAllItems();		
 					armors.setSpeed(sets.global.getSpeed());
 					stacks = (List<ItemStack>)player.getArmorInventoryList();
 					for(int k = 0; k < stacks.size(); k++) {
-						ItemStack x = stacks.get(i).copy();
-						if(stacks != null) {
-							armors.addItem(x);
+						if(!stacks.get(k).isEmpty()) {
+							ItemStack x = stacks.get(k).copy();
+							if(stacks != null) {
+								armors.addItem(x);
+							}
 						}
 					}
+				} else {
+					player.clearActivePotions();
 				}
 				
 				int setNumber = sets.armors.checkIfSet(player);
@@ -104,7 +123,7 @@ public class EventEquipmentSets {
 				speed = armors.getSpeed();
 			}
 			if(potionsEffects != null) { 
-				int m = 0;
+				m = 0;
 				while(m < potionsEffects.size()) {
 					Equiped.addPotionEffect(player, armors.getPotionEffect().get(m));
 					m++;
@@ -114,7 +133,6 @@ public class EventEquipmentSets {
 				log.info(speed);
 				player.capabilities.setPlayerWalkSpeed(speed);
 			}
-			
 		}	
 	}
 }
