@@ -30,12 +30,23 @@ public class ArmorStorage implements IStorage<IArmor> {
         	NBTTagCompound tag = new NBTTagCompound();
         	tag.setInteger("effect", potion.effect);
         	tag.setInteger("efficiency", potion.efficiency);
-        	
         	potionTagList.appendTag(tag);
         }
+                
+        NBTTagList usedPotionTagList = new NBTTagList();
+        for (Potion potion: instance.getPotionEffect()) {
+        	NBTTagCompound tag = new NBTTagCompound();
+        	tag.setInteger("effect", potion.effect);
+        	tag.setInteger("efficiency", potion.efficiency);
+        	tag.setInteger("duration", potion.duration);
+        	potionTagList.appendTag(tag);
+        }
+        
+        
         bigCompoundList.setTag("items", itemTagList);
         bigCompoundList.setTag("potions", potionTagList);
         bigCompoundList.setFloat("speed", instance.getSpeed());
+        bigCompoundList.setTag("usedPotions", usedPotionTagList);
         
         return bigCompoundList;
 	}
@@ -52,9 +63,14 @@ public class ArmorStorage implements IStorage<IArmor> {
         NBTTagList potionList = bigCompoundList.getTagList("potions", net.minecraftforge.common.util.Constants.NBT.TAG_LIST);
         
         for(int i = 0; i < potionList.tagCount(); i++) {
-        	new Potion(potionList.getCompoundTagAt(i).getInteger("effect"), potionList.getCompoundTagAt(i).getInteger("efficiency"));
+        	new Potion(potionList.getCompoundTagAt(i).getInteger("effect"), potionList.getCompoundTagAt(i).getInteger("efficiency"), 0);
         }
 		
+        NBTTagList usedPotionList = bigCompoundList.getTagList("usedPotions", net.minecraftforge.common.util.Constants.NBT.TAG_LIST);
+        for(int i=0; i < usedPotionList.tagCount(); i++) {
+        	new Potion(usedPotionList.getCompoundTagAt(i).getInteger("effect"), usedPotionList.getCompoundTagAt(i).getInteger("efficiency"), usedPotionList.getCompoundTagAt(i).getInteger("duration"));
+        }
+        
         new Float(bigCompoundList.getFloat("speed")); 
 	}
 }

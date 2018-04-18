@@ -2,6 +2,7 @@ package com.viste.realisticarmortiers.events;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +19,7 @@ import com.viste.realisticarmortiers.logic.Equiped;
 import jline.internal.Log;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -51,8 +53,8 @@ public class EventEquipmentSets {
 						
 			if(player.hasCapability(ArmorProvider.Armor, null)) {
 				armors = player.getCapability(ArmorProvider.Armor, null);				
-				if(armors != null && armors.getItems().size() > 0) {
-					stacks = (List<ItemStack>) player.getArmorInventoryList();
+				if(armors != null) {
+					stacks = (List<ItemStack>)player.getArmorInventoryList();
 					int numberOfStack = 0;
 					for(int k=0; k < stacks.size(); k++) {
 						if(!stacks.get(k).isEmpty()) {
@@ -79,17 +81,26 @@ public class EventEquipmentSets {
 					}
 				}
 			}
-			if(!foundWhole) {				
+			if(foundWhole) {				
+				potionsEffects = armors.getPotionEffect();
+				speed = armors.getSpeed();
+			} else {
 				if(player.hasCapability(ArmorProvider.Armor, null)) {
 					m = 0;
 					potionsEffects = armors.getPotionEffect();
-					
 					while(m < potionsEffects.size()) {
 						player.removePotionEffect((net.minecraft.potion.Potion.getPotionById(potionsEffects.get(m).effect)));
 						m++;
 					}
-					armors.removeAllItems();		
+					armors.removeAllItems();
 					armors.setSpeed(sets.global.getSpeed());
+					
+					 for (PotionEffect effect : player.getActivePotionEffects()) {
+						  Potion usedPotion = new Potion(net.minecraft.potion.Potion.getIdFromPotion(effect.getPotion()), effect.getAmplifier(), effect.getDuration());
+						  armors.addUsedPotion(usedPotion);
+						  player.removeActivePotionEffect(effect.getPotion());
+					}
+					
 					stacks = (List<ItemStack>)player.getArmorInventoryList();
 					for(int k = 0; k < stacks.size(); k++) {
 						if(!stacks.get(k).isEmpty()) {
@@ -118,10 +129,8 @@ public class EventEquipmentSets {
 					}
 					armors.setSpeed(speed);
 				}
-			} else {
-				potionsEffects = armors.getPotionEffect();
-				speed = armors.getSpeed();
 			}
+			
 			if(potionsEffects != null) { 
 				m = 0;
 				while(m < potionsEffects.size()) {
@@ -129,6 +138,12 @@ public class EventEquipmentSets {
 					m++;
 				}
 			}
+			
+			if(!foundWhole) {
+				potionsEffects = armors.getUsedPotionEffect();
+				Equiped.addUsedPotionEffect(player, potionsEffects, armors);
+			}
+			
 			if(speed != player.capabilities.getWalkSpeed()) {
 				log.info(speed);
 				player.capabilities.setPlayerWalkSpeed(speed);

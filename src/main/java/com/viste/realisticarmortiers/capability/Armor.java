@@ -11,6 +11,7 @@ public class Armor implements IArmor {
 	
 	private List<ItemStack> items = new ArrayList<>();
 	private List<Potion> potions = new ArrayList<>();
+	private List<Potion> usedPotion = new ArrayList<>();
 	private float speed = 0.1f;
 	
 	@Override
@@ -62,6 +63,23 @@ public class Armor implements IArmor {
 		return this.potions;
 	}
 
+	@Override
+	public List<Potion> getUsedPotionEffect() {
+		return this.usedPotion;
+	}
+	
+	@Override
+	public void removeUsedPotion(Potion potion)
+	{
+		this.usedPotion.remove(potion);
+	}
+	
+	@Override
+	public void addUsedPotion(Potion potion)
+	{
+		this.usedPotion.add(potion);
+	}
+	
 	@Override
 	public List<ItemStack> getItems() {
 

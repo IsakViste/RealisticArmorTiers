@@ -15,10 +15,15 @@ public interface IArmor {
     public void removePotionEffect(Potion potion);
     public void removeAllItems();
     public void setSpeed(float speed);
+    public void removeUsedPotion(Potion potion);
+    public void addUsedPotion(Potion potion);
     
     public List<Potion> getPotionEffect();
     public List<ItemStack> getItems();
 	public float getSpeed();
+	public List<Potion> getUsedPotionEffect();
+	
+	
 	
     
 }
