@@ -1,5 +1,6 @@
 package com.viste.realisticarmortiers.logic;
 
+import java.util.Iterator;
 import java.util.List;
 
 import com.viste.realisticarmortiers.capability.ArmorProvider;
@@ -29,19 +30,20 @@ public class Equiped {
 		player.addPotionEffect(new PotionEffect(Potion.getPotionById(potion.effect), global.getPotionDur(), potion.efficiency - 1));
 	}
 	
-	public static void addUsedPotionEffect(EntityPlayerMP player, List<com.viste.realisticarmortiers.data.Potion> potion, IArmor armors) {	
-		for(int i=0; i < potion.size(); i++) {
-			if(potion.get(i).duration > 0) {
-				if(player.getActivePotionEffect(Potion.getPotionById(potion.get(i).effect)) == null) {
-					player.addPotionEffect(new PotionEffect(Potion.getPotionById(potion.get(i).effect), potion.get(i).duration, potion.get(i).efficiency - 1));
-					armors.removeUsedPotion(potion.get(i));
+	public static void addUsedPotionEffect(EntityPlayerMP player, List<com.viste.realisticarmortiers.data.Potion> potion, IArmor armors) {
+		Iterator<com.viste.realisticarmortiers.data.Potion> i = potion.iterator();
+		while (i.hasNext()) {
+		   com.viste.realisticarmortiers.data.Potion o = i.next();
+		   if(o.duration > 0) {
+				if(player.getActivePotionEffect(Potion.getPotionById(o.effect)) == null) {
+					player.addPotionEffect(new PotionEffect(Potion.getPotionById(o.effect), o.duration, o.efficiency));
+					i.remove();
 				}
 			} else {
-				armors.removeUsedPotion(potion.get(i));
+				i.remove();
 			}
-			
+		    
 		}
-		
 	}
 }
 

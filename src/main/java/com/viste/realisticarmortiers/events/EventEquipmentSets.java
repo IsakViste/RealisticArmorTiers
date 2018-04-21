@@ -2,6 +2,7 @@ package com.viste.realisticarmortiers.events;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -94,11 +95,13 @@ public class EventEquipmentSets {
 					}
 					armors.removeAllItems();
 					armors.setSpeed(sets.global.getSpeed());
-					
-					 for (PotionEffect effect : player.getActivePotionEffects()) {
-						  Potion usedPotion = new Potion(net.minecraft.potion.Potion.getIdFromPotion(effect.getPotion()), effect.getAmplifier(), effect.getDuration());
-						  armors.addUsedPotion(usedPotion);
-						  player.removeActivePotionEffect(effect.getPotion());
+					Collection<PotionEffect> potionEffectsPlayer = player.getActivePotionEffects();
+					Iterator<PotionEffect> potionEffects = potionEffectsPlayer.iterator();
+					while (potionEffects.hasNext()) {
+						PotionEffect o = potionEffects.next();
+						Potion usedPotion = new Potion(net.minecraft.potion.Potion.getIdFromPotion(o.getPotion()), o.getAmplifier(), o.getDuration());
+						armors.addUsedPotion(usedPotion);
+						potionEffects.remove();
 					}
 					
 					stacks = (List<ItemStack>)player.getArmorInventoryList();
