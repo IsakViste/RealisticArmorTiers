@@ -1,6 +1,7 @@
 package com.viste.realisticarmortiers.events;
 
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,11 +19,14 @@ import com.viste.realisticarmortiers.data.Potion;
 import com.viste.realisticarmortiers.logic.Equiped;
 
 import jline.internal.Log;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 
@@ -147,9 +151,11 @@ public class EventEquipmentSets {
 				Equiped.addUsedPotionEffect(player, potionsEffects, armors);
 			}
 			
+			//log.info(player.capabilities.getWalkSpeed());
+			
 			if(speed != player.capabilities.getWalkSpeed()) {
-				log.info(speed);
-				player.capabilities.setPlayerWalkSpeed(speed);
+				PlayerCapabilities cap = ObfuscationReflectionHelper.getPrivateValue(EntityPlayer.class, player, "capabilities", "field_71075_bZ");
+				ObfuscationReflectionHelper.setPrivateValue(PlayerCapabilities.class, cap, speed,"walkSpeed", "field_73357_f");
 			}
 		}	
 	}
