@@ -158,8 +158,7 @@ public class EventEquipmentSets {
 			}
 			
 			IAttributeInstance movement = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			double alfa = movement.getModifier(setSpeedUUID).getAmount();
-			if(Double.compare(movement.getModifier(setSpeedUUID).getAmount(), speed) != 0) {
+			if(movement.getModifier(setSpeedUUID) != null && Double.compare(movement.getModifier(setSpeedUUID).getAmount(), speed) != 0) {
 				AttributeModifier setSpeedBonus = new AttributeModifier(setSpeedUUID, "Set speed", Math.abs(speed), 0);				
 				if(movement.getModifier(setSpeedUUID) != null) {					
 					movement.removeAllModifiers();
