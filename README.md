@@ -5,6 +5,7 @@
 * [Downloads](#downloads)
 * [Current Features](#current-features)
 * [Planned Features](#planned-features)
+* [Important](#important)
 * [Links](#links)
 
 ---
@@ -28,15 +29,21 @@ Support for other mods has been added and should be working.
 - [x] Wearing a full set applies potions effects depending on set
 - [x] Add a config file where you can change potion effects and speed modifiers
 - [x] Add support for other mods that add in armor
+- [x] Make tiers composed of different slots and let sets use tier slot instead of specific item
+- [x] Works on servers
 
 ---
 
 ## <a name="planned-features"></a>Planned Features
-**General**
-- [ ] Balance the mod
+<a href="https://trello.com/b/hTN7viQI">**Check our trello!**</a>
 - [ ] Include main-hand and off-hand items in sets
 - [ ] Cross-mod behaviour with <a href="https://github.com/IsakViste/RealisticWeightModifiers">RWM</a>
-- [ ] Make tiers composed of different slots and let sets use tier slot instead of specific item
+
+---
+
+## <a name="important"></a>Important
+**NEW VERSION 1.1.0: Delete old config files, the json files have changed!**
+Only the first set that the player's equipment match is activated, all further sets that might match will not be loaded. The higher up the set is in the file, the higher it's priority!
 
 ---
 
