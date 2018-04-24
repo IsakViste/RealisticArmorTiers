@@ -12,7 +12,7 @@ public class Armor implements IArmor {
 	private List<ItemStack> items = new ArrayList<>();
 	private List<Potion> potions = new ArrayList<>();
 	private List<Potion> usedPotion = new ArrayList<>();
-	private float speed = 0.1f;
+	private double speed = 0;
 	
 	@Override
 	public void addItem(ItemStack item) {
@@ -39,13 +39,13 @@ public class Armor implements IArmor {
 	}
 	
 	@Override
-	public float getSpeed()
+	public double getSpeed()
 	{
 		return this.speed;
 	}
 	
 	@Override
-	public void setSpeed(float speed)
+	public void setSpeed(double speed)
 	{
 		this.speed = speed;
 	}

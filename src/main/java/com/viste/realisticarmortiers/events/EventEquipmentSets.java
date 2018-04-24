@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,9 @@ import com.viste.realisticarmortiers.data.Potion;
 import com.viste.realisticarmortiers.logic.Equiped;
 
 import jline.internal.Log;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.PlayerCapabilities;
@@ -34,6 +38,8 @@ public class EventEquipmentSets {
 	private MinecraftServer server;
 	private EquipmentSetsParser sets;
 	private static final Logger log = LogManager.getLogger(Reference.MODID);
+	private static final UUID setSpeedUUID = UUID.fromString("015ad548-47e6-11e8-842f-0ed5f89f718b");
+
 	public EventEquipmentSets() {
 		sets = new EquipmentSetsParser();
 
@@ -49,10 +55,10 @@ public class EventEquipmentSets {
 		List<Potion> potionsEffects = new ArrayList<Potion>();
 		boolean foundWhole = false;
 		boolean found = false;
-		float speed;
+		double speed;
 		for(int i=0; i < list.size(); i++) {
 			int m;
-			speed = sets.global.getSpeed();
+			speed = 0;
 			EntityPlayerMP player = list.get(i);
 			List <ItemStack> stacks = null;
 						
@@ -151,11 +157,14 @@ public class EventEquipmentSets {
 				Equiped.addUsedPotionEffect(player, potionsEffects, armors);
 			}
 			
-			//log.info(player.capabilities.getWalkSpeed());
-			
-			if(speed != player.capabilities.getWalkSpeed()) {
-				PlayerCapabilities cap = ObfuscationReflectionHelper.getPrivateValue(EntityPlayer.class, player, "capabilities", "field_71075_bZ");
-				ObfuscationReflectionHelper.setPrivateValue(PlayerCapabilities.class, cap, speed,"walkSpeed", "field_73357_f");
+			IAttributeInstance movement = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
+			double alfa = movement.getModifier(setSpeedUUID).getAmount();
+			if(Double.compare(movement.getModifier(setSpeedUUID).getAmount(), speed) != 0) {
+				AttributeModifier setSpeedBonus = new AttributeModifier(setSpeedUUID, "Set speed", Math.abs(speed), 0);				
+				if(movement.getModifier(setSpeedUUID) != null) {					
+					movement.removeAllModifiers();
+				}
+				movement.applyModifier(setSpeedBonus);
 			}
 		}	
 	}

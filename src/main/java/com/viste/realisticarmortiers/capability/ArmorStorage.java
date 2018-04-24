@@ -45,7 +45,7 @@ public class ArmorStorage implements IStorage<IArmor> {
         
         bigCompoundList.setTag("items", itemTagList);
         bigCompoundList.setTag("potions", potionTagList);
-        bigCompoundList.setFloat("speed", instance.getSpeed());
+        bigCompoundList.setDouble("speed", instance.getSpeed());
         bigCompoundList.setTag("usedPotions", usedPotionTagList);
         
         return bigCompoundList;
