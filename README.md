@@ -18,6 +18,13 @@ Support for other mods has been added and should be working.
 
 ---
 
+## <a name="important"></a>Important
+**NEW VERSION 1.1.0: Delete old config files, the json files have changed!**
+
+Only the first set that the player's equipment match is activated, all further sets that might match will not be loaded. The higher up the set is in the file, the higher it's priority!
+
+---
+
 ## <a name="downloads"></a>Downloads
 - <a href="https://minecraft.curseforge.com/projects/realistic-armor-tiers/files">CurseForge Download</a>
 - <a href="https://github.com/IsakViste/RealisticArmorTiers/releases">Github Download</a>
@@ -38,12 +45,6 @@ Support for other mods has been added and should be working.
 <a href="https://trello.com/b/hTN7viQI">**Check our trello!**</a>
 - [ ] Include main-hand and off-hand items in sets
 - [ ] Cross-mod behaviour with <a href="https://github.com/IsakViste/RealisticWeightModifiers">RWM</a>
-
----
-
-## <a name="important"></a>Important
-**NEW VERSION 1.1.0: Delete old config files, the json files have changed!**
-Only the first set that the player's equipment match is activated, all further sets that might match will not be loaded. The higher up the set is in the file, the higher it's priority!
 
 ---
 
