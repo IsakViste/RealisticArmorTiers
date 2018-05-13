@@ -5,6 +5,7 @@ import com.viste.realisticarmortiers.capability.ArmorHandler;
 import com.viste.realisticarmortiers.capability.ArmorStorage;
 import com.viste.realisticarmortiers.capability.IArmor;
 import com.viste.realisticarmortiers.events.EventEquipmentSets;
+import com.viste.realisticarmortiers.events.EventEquipmentSetsClearActivePotion;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -22,7 +23,8 @@ public class CommonProxy implements IProxy {
 
 	public void postInit() {
 		CapabilityManager.INSTANCE.register(IArmor.class, new ArmorStorage(), Armor.class);
-		MinecraftForge.EVENT_BUS.register(new EventEquipmentSets());
+		MinecraftForge.EVENT_BUS.register(new EventEquipmentSetsClearActivePotion());
 		MinecraftForge.EVENT_BUS.register(new ArmorHandler());
+		MinecraftForge.EVENT_BUS.register(new EventEquipmentSets());
 	}
 }

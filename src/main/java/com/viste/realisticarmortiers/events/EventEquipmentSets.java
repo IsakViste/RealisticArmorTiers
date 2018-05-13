@@ -23,16 +23,16 @@ import jline.internal.Log;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.player.PlayerCapabilities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 public class EventEquipmentSets {	
 	private MinecraftServer server;
@@ -44,12 +44,9 @@ public class EventEquipmentSets {
 		sets = new EquipmentSetsParser();
 
 	}
-		
 	@SubscribeEvent
 	public void onServerTick(ServerTickEvent evt) {		
-		if(this.server == null) {
-			this.server = FMLCommonHandler.instance().getMinecraftServerInstance();
-		}
+		this.server = FMLCommonHandler.instance().getMinecraftServerInstance();
 		List<EntityPlayerMP> list = Lists.newArrayList(this.server.getPlayerList().getPlayers());
 		IArmor armors = null;
 		List<Potion> potionsEffects = new ArrayList<Potion>();

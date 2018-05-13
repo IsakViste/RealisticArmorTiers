@@ -34,7 +34,7 @@ public class Equiped {
 		Iterator<com.viste.realisticarmortiers.data.Potion> i = potion.iterator();
 		while (i.hasNext()) {
 		   com.viste.realisticarmortiers.data.Potion o = i.next();
-		   if(o.duration > 0 && o.duration < 2147483645) {
+		   if(o.duration > 0 && o.duration < 2000000000) {
 				if(player.getActivePotionEffect(Potion.getPotionFromResourceLocation(o.effect)) == null) {
 					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(o.effect), o.duration, o.efficiency));
 					i.remove();
