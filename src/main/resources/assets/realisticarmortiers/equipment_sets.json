@@ -7,15 +7,11 @@
   "boots": "minecraft:leather_boots",
   "potion": [
     {
-      "effect": 8,
+      "effect": "minecraft:speed",
       "efficiency": 3
     },
     {
-      "effect": 16,
-      "efficiency": 1
-    },
-    {
-      "effect": 13,
+      "effect": "minecraft:jump_boost",
       "efficiency": 1
     }
   ]
@@ -28,11 +24,11 @@
   "boots": "minecraft:leather_boots",
   "potion": [
     {
-      "effect": 8,
+      "effect": "minecraft:speed",
       "efficiency": 3
     },
     {
-      "effect": 16,
+      "effect": "minecraft:jump_boost",
       "efficiency": 1
     }
   ]
@@ -45,7 +41,7 @@
   "boots": "minecraft:leather_boots",
   "potion": [
     {
-      "effect": 8,
+      "effect": "minecraft:speed",
       "efficiency": 3
     }
   ]

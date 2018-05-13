@@ -100,7 +100,7 @@ public class EventEquipmentSets {
 					m = 0;
 					potionsEffects = armors.getPotionEffect();
 					while(m < potionsEffects.size()) {
-						player.removePotionEffect((net.minecraft.potion.Potion.getPotionById(potionsEffects.get(m).effect)));
+						player.removePotionEffect((net.minecraft.potion.Potion.getPotionFromResourceLocation(potionsEffects.get(m).effect)));
 						m++;
 					}
 					armors.removeAllItems();
@@ -109,7 +109,7 @@ public class EventEquipmentSets {
 					Iterator<PotionEffect> potionEffects = potionEffectsPlayer.iterator();
 					while (potionEffects.hasNext()) {
 						PotionEffect o = potionEffects.next();
-						Potion usedPotion = new Potion(net.minecraft.potion.Potion.getIdFromPotion(o.getPotion()), o.getAmplifier(), o.getDuration());
+						Potion usedPotion = new Potion(o.getPotion().getRegistryName().getResourceDomain()+":"+o.getPotion().getRegistryName().getResourcePath(), o.getAmplifier(), o.getDuration());
 						armors.addUsedPotion(usedPotion);
 						potionEffects.remove();
 					}
