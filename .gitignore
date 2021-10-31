@@ -17,9 +17,10 @@ out
 ## Gradle
 build
 .gradle
-
-## ForgeGradle
 run
+
+## Forge MDK
+forge*changelog.txt
 
 ## Tools
 build.bat
