@@ -1,167 +1,144 @@
 package com.viste.realisticarmortiers.events;
 
-
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.viste.realisticarmortiers.RealisticArmorTiers;
+import com.viste.realisticarmortiers.data.PotionEffect;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.server.ServerLifecycleHooks;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import com.google.common.collect.Lists;
-import com.viste.realisticarmortiers.Reference;
 import com.viste.realisticarmortiers.capability.ArmorProvider;
 import com.viste.realisticarmortiers.capability.IArmor;
 import com.viste.realisticarmortiers.data.EquipmentSetsParser;
-import com.viste.realisticarmortiers.data.Potion;
 import com.viste.realisticarmortiers.logic.Equiped;
 
-import jline.internal.Log;
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
-public class EventEquipmentSets {	
-	private MinecraftServer server;
-	private EquipmentSetsParser sets;
-	private static final Logger log = LogManager.getLogger(Reference.MODID);
-	private static final UUID setSpeedUUID = UUID.fromString("015ad548-47e6-11e8-842f-0ed5f89f718b");
+public class EventEquipmentSets {
+	private final EquipmentSetsParser sets;
 
 	public EventEquipmentSets() {
 		sets = new EquipmentSetsParser();
-
 	}
+
 	@SubscribeEvent
-	public void onServerTick(ServerTickEvent evt) {		
-		this.server = FMLCommonHandler.instance().getMinecraftServerInstance();
-		List<EntityPlayerMP> list = Lists.newArrayList(this.server.getPlayerList().getPlayers());
+	public void onServerTick(TickEvent.ServerTickEvent evt) {
+		MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+		List<ServerPlayerEntity> playerList = Lists.newArrayList(server.getPlayerList().getPlayers());
 		IArmor armors = null;
-		List<Potion> potionsEffects = new ArrayList<Potion>();
+		List<PotionEffect> setEffects = new ArrayList<>();
 		boolean foundWhole = false;
-		boolean found = false;
-		double speed;
-		for(int i=0; i < list.size(); i++) {
+		for (ServerPlayerEntity serverPlayerEntity : playerList) {
 			int m;
-			speed = 0;
-			EntityPlayerMP player = list.get(i);
-			List <ItemStack> stacks = null;
-						
-			if(player.hasCapability(ArmorProvider.Armor, null)) {
-				armors = player.getCapability(ArmorProvider.Armor, null);				
-				if(armors != null) {
-					stacks = (List<ItemStack>)player.getArmorInventoryList();
-					int numberOfStack = 0;
-					for(int k=0; k < stacks.size(); k++) {
-						if(!stacks.get(k).isEmpty()) {
-							numberOfStack++;
-						}
+			List<ItemStack> stacks;
+
+			if (serverPlayerEntity.getCapability(ArmorProvider.Armor).isPresent()) {
+				armors = (IArmor) serverPlayerEntity.getCapability(ArmorProvider.Armor);
+				stacks = (List<ItemStack>) serverPlayerEntity.getArmorSlots();
+				int numberOfStack = 0;
+				for (ItemStack stack : stacks) {
+					if (!stack.isEmpty()) {
+						numberOfStack++;
 					}
-					if(numberOfStack == armors.getItems().size()) {
-						foundWhole = true;
-						for(int k=0; k < stacks.size(); k++) {
-							found = false;
-							if(!stacks.get(k).isEmpty()) {
-								for(int l=0; l < armors.getItems().size(); l++)	{
-									if(stacks.get(k).getItem().equals(armors.getItems().get(l).getItem())) {
-										found = true;
-										break;
-									}
-								}
-								if(found == false) {
-									foundWhole = false;
+				}
+				if (numberOfStack == armors.getItems().size()) {
+					foundWhole = true;
+					for (ItemStack stack : stacks) {
+						boolean found = false;
+						if (!stack.isEmpty()) {
+							for (int l = 0; l < armors.getItems().size(); l++) {
+								if (stack.getItem().equals(armors.getItems().get(l).getItem())) {
+									found = true;
 									break;
 								}
+							}
+							if (!found) {
+								foundWhole = false;
+								break;
 							}
 						}
 					}
 				}
 			}
-			if(foundWhole) {				
-				potionsEffects = armors.getPotionEffect();
-				speed = armors.getSpeed();
+			if (foundWhole) {
+				setEffects = armors.getPotionEffects();
 			} else {
-				if(player.hasCapability(ArmorProvider.Armor, null)) {
-					m = 0;
-					potionsEffects = armors.getPotionEffect();
-					while(m < potionsEffects.size()) {
-						player.removePotionEffect((net.minecraft.potion.Potion.getPotionFromResourceLocation(potionsEffects.get(m).effect)));
-						m++;
-					}
-					armors.removeAllItems();
-					armors.setSpeed(sets.global.getSpeed());
-					Collection<PotionEffect> potionEffectsPlayer = player.getActivePotionEffects();
-					Iterator<PotionEffect> potionEffects = potionEffectsPlayer.iterator();
-					while (potionEffects.hasNext()) {
-						PotionEffect o = potionEffects.next();
-						Potion usedPotion = new Potion(o.getPotion().getRegistryName().getResourceDomain()+":"+o.getPotion().getRegistryName().getResourcePath(), o.getAmplifier(), o.getDuration());
-						armors.addUsedPotion(usedPotion);
-						potionEffects.remove();
-					}
-					
-					stacks = (List<ItemStack>)player.getArmorInventoryList();
-					for(int k = 0; k < stacks.size(); k++) {
-						if(!stacks.get(k).isEmpty()) {
-							ItemStack x = stacks.get(k).copy();
-							if(stacks != null) {
-								armors.addItem(x);
+				if (serverPlayerEntity.getCapability(ArmorProvider.Armor).isPresent()) {
+					if(armors != null) {
+						m = 0;
+						setEffects = armors.getPotionEffects();
+						while (m < setEffects.size()) {
+							RegistryObject<Effect> potionEffect = RegistryObject.of(new ResourceLocation(setEffects.get(m).id), ForgeRegistries.POTIONS);
+							if (potionEffect.isPresent()) {
+								serverPlayerEntity.removeEffect(potionEffect.get());
+							}
+							m++;
+						}
+						armors.removeAllItems();
+						Collection<EffectInstance> potionEffectsPlayer = serverPlayerEntity.getActiveEffects();
+						Iterator<EffectInstance> potionEffects = potionEffectsPlayer.iterator();
+						while (potionEffects.hasNext()) {
+							EffectInstance o = potionEffects.next();
+							ResourceLocation effectResLoc = o.getEffect().getRegistryName();
+							if(effectResLoc == null) {
+								RealisticArmorTiers.LOGGER.warn("Could not find ResourceLocation of " + o.getDescriptionId());
+								continue;
+							}
+							PotionEffect usedPotion = new PotionEffect(effectResLoc.getNamespace() + ":" + o.getEffect().getRegistryName().getPath(), o.getAmplifier(), o.getDuration());
+
+							armors.addUsedPotionEffect(usedPotion);
+							potionEffects.remove();
+						}
+
+						stacks = (List<ItemStack>) serverPlayerEntity.getArmorSlots();
+						for (ItemStack stack : stacks) {
+							if(!stack.isEmpty()) {
+								armors.addItem(stack.copy());
 							}
 						}
 					}
 				} else {
-					player.clearActivePotions();
+					serverPlayerEntity.removeAllEffects();
 				}
-				
-				int setNumber = sets.armors.checkIfSet(player);
-				if(setNumber != -1) {
-					potionsEffects = sets.armors.getPotions(setNumber);
+
+				int setNumber = sets.armors.checkIfSet(serverPlayerEntity);
+				if (setNumber != -1) {
+					setEffects = sets.armors.getPotionEffects(setNumber);
 				}
-				
-				speed = speed + sets.tiers.checkIfTier(player);
-				if(speed < 0) {
-					speed = 0;
-				}
-				if(player.hasCapability(ArmorProvider.Armor, null)) {
-					if(potionsEffects != null) {
-						armors.addPotionEffectList(potionsEffects);
+
+				if (serverPlayerEntity.getCapability(ArmorProvider.Armor).isPresent()) {
+					if (setEffects != null && armors != null) {
+						armors.addPotionEffectList(setEffects);
 					}
-					armors.setSpeed(speed);
 				}
 			}
-			
-			if(potionsEffects != null) { 
-				m = 0;
-				while(m < potionsEffects.size()) {
-					Equiped.addPotionEffect(player, armors.getPotionEffect().get(m));
-					m++;
+
+			if (armors != null) {
+				if (setEffects != null) {
+					m = 0;
+					while (m < setEffects.size()) {
+						Equiped.addPotionEffect(serverPlayerEntity, armors.getPotionEffects().get(m));
+						m++;
+					}
+				}
+
+				if (!foundWhole) {
+					setEffects = armors.getUsedPotionEffects();
+					Equiped.addUsedPotionEffect(serverPlayerEntity, setEffects, armors);
 				}
 			}
-			
-			if(!foundWhole) {
-				potionsEffects = armors.getUsedPotionEffect();
-				Equiped.addUsedPotionEffect(player, potionsEffects, armors);
-			}
-			
-			IAttributeInstance movement = player.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
-			if(movement.getModifier(setSpeedUUID) != null && Double.compare(movement.getModifier(setSpeedUUID).getAmount(), speed) != 0) {
-				AttributeModifier setSpeedBonus = new AttributeModifier(setSpeedUUID, "Set speed", Math.abs(speed), 0);				
-				if(movement.getModifier(setSpeedUUID) != null) {					
-					movement.removeAllModifiers();
-				}
-				movement.applyModifier(setSpeedBonus);
-			}
-		}	
+		}
 	}
 }

@@ -3,17 +3,20 @@ package com.viste.realisticarmortiers.capability;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.viste.realisticarmortiers.data.Potion;
-
+import com.viste.realisticarmortiers.data.PotionEffect;
 import net.minecraft.item.ItemStack;
 
 public class Armor implements IArmor {
 	
 	private List<ItemStack> items = new ArrayList<>();
-	private List<Potion> potions = new ArrayList<>();
-	private List<Potion> usedPotion = new ArrayList<>();
-	private double speed = 0;
-	
+	private List<PotionEffect> potionEffects = new ArrayList<>();
+	private List<PotionEffect> usedPotionEffects = new ArrayList<>();
+
+	@Override
+	public List<ItemStack> getItems() {
+		return this.items;
+	}
+
 	@Override
 	public void addItem(ItemStack item) {
 		items.add(item);
@@ -25,65 +28,43 @@ public class Armor implements IArmor {
 	}
 
 	@Override
-	public void addPotionEffect(Potion potion) {
-		potions.add(potion);
-	}
-	
-	public void addPotionEffectList(List<Potion> potions) {
-		this.potions.addAll(potions);
-	}
-
-	@Override
-	public void removePotionEffect(Potion potion) {
-		potions.remove(potion);
-	}
-	
-	@Override
-	public double getSpeed()
-	{
-		return this.speed;
-	}
-	
-	@Override
-	public void setSpeed(double speed)
-	{
-		this.speed = speed;
-	}
-	
-	
-	@Override
-	public void removeAllItems()
-	{
+	public void removeAllItems() {
 		items.removeAll(items);
-		potions.removeAll(potions);
+		potionEffects.removeAll(potionEffects);
 	}
 
 	@Override
-	public List<Potion> getPotionEffect() {
-		return this.potions;
+	public List<PotionEffect> getPotionEffects() {
+		return this.potionEffects;
 	}
 
 	@Override
-	public List<Potion> getUsedPotionEffect() {
-		return this.usedPotion;
+	public void addPotionEffect(PotionEffect potionEffect) {
+		potionEffects.add(potionEffect);
+	}
+
+	@Override
+	public void addPotionEffectList(List<PotionEffect> potionEffect) {
+		this.potionEffects.addAll(potionEffect);
+	}
+
+	@Override
+	public void removePotionEffect(PotionEffect potionEffect) {
+		potionEffects.remove(potionEffect);
+	}
+
+	@Override
+	public List<PotionEffect> getUsedPotionEffects() {
+		return this.usedPotionEffects;
+	}
+
+	@Override
+	public void addUsedPotionEffect(PotionEffect potionEffect) {
+		this.usedPotionEffects.add(potionEffect);
 	}
 	
 	@Override
-	public void removeUsedPotion(Potion potion)
-	{
-		this.usedPotion.remove(potion);
+	public void removeUsedPotionEffect(PotionEffect potionEffect) {
+		this.usedPotionEffects.remove(potionEffect);
 	}
-	
-	@Override
-	public void addUsedPotion(Potion potion)
-	{
-		this.usedPotion.add(potion);
-	}
-	
-	@Override
-	public List<ItemStack> getItems() {
-
-		return this.items;
-	}
-
 }

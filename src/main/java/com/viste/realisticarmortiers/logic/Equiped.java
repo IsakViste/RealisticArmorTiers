@@ -7,42 +7,48 @@ import com.viste.realisticarmortiers.capability.ArmorProvider;
 import com.viste.realisticarmortiers.capability.IArmor;
 import com.viste.realisticarmortiers.data.EventEquipmentGlobalVar;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import com.viste.realisticarmortiers.data.PotionEffect;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class Equiped {
 	
-	public static void addSetEffectsArmor(EntityPlayerMP player, String potion_effect, int efficiency){
-		com.viste.realisticarmortiers.data.Potion potion = new com.viste.realisticarmortiers.data.Potion(potion_effect, efficiency, 0);
-		if(player.hasCapability(ArmorProvider.Armor, null)) {
-			IArmor armors = player.getCapability(ArmorProvider.Armor, null);				
-			armors.addPotionEffect(potion);
+	public static void addPotionEffectsArmor(ServerPlayerEntity player, String potion_effect, int efficiency) {
+		PotionEffect potionEffect = new PotionEffect(potion_effect, efficiency, 0);
+		if(player.getCapability(ArmorProvider.Armor).isPresent()) {
+			IArmor armors = (IArmor) player.getCapability(ArmorProvider.Armor);
+			armors.addPotionEffect(potionEffect);
 		}
-		addPotionEffect(player, potion);
+		addPotionEffect(player, potionEffect);
 	}
 	
-	public static void addPotionEffect(EntityPlayerMP player, com.viste.realisticarmortiers.data.Potion potion) {
-		EventEquipmentGlobalVar global = new EventEquipmentGlobalVar();		
-		if(player.getActivePotionEffect(Potion.getPotionFromResourceLocation(potion.effect)) != null) {
-			player.removeActivePotionEffect(Potion.getPotionFromResourceLocation(potion.effect));
-		} 
-		player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(potion.effect), global.getPotionDur(), potion.efficiency - 1));
+	public static void addPotionEffect(ServerPlayerEntity player, PotionEffect setEffect) {
+		EventEquipmentGlobalVar global = new EventEquipmentGlobalVar();
+
+		RegistryObject<Effect> potionEffect = RegistryObject.of(new ResourceLocation(setEffect.id), ForgeRegistries.POTIONS);
+		if (player.hasEffect(potionEffect.get())) {
+			player.removeEffect(potionEffect.get());
+		}
+		player.addEffect(new EffectInstance(potionEffect.get(), global.getPotionDur(), setEffect.efficiency - 1));
 	}
 	
-	public static void addUsedPotionEffect(EntityPlayerMP player, List<com.viste.realisticarmortiers.data.Potion> potion, IArmor armors) {
-		Iterator<com.viste.realisticarmortiers.data.Potion> i = potion.iterator();
+	public static void addUsedPotionEffect(ServerPlayerEntity player, List<PotionEffect> potionEffects, IArmor armors) {
+		Iterator<PotionEffect> i = potionEffects.iterator();
 		while (i.hasNext()) {
-		   com.viste.realisticarmortiers.data.Potion o = i.next();
-		   if(o.duration > 0 && o.duration < 2000000000) {
-				if(player.getActivePotionEffect(Potion.getPotionFromResourceLocation(o.effect)) == null) {
-					player.addPotionEffect(new PotionEffect(Potion.getPotionFromResourceLocation(o.effect), o.duration, o.efficiency));
-					i.remove();
-				}
+		   PotionEffect setEffect = i.next();
+		   if(setEffect.duration > 0 && setEffect.duration < 2000000000) {
+			   RegistryObject<Effect> potionEffect = RegistryObject.of(new ResourceLocation(setEffect.id), ForgeRegistries.POTIONS);
+			   if(!player.hasEffect(potionEffect.get())) {
+				   player.addEffect(new EffectInstance(potionEffect.get(), setEffect.duration, setEffect.efficiency));
+				   i.remove();
+			   }
 			} else {
 				i.remove();
 			}
-		    
 		}
 	}
 }

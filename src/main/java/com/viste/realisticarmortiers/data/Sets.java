@@ -2,27 +2,27 @@ package com.viste.realisticarmortiers.data;
 
 import java.util.List;
 
-import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ArmorItem;
 
 public class Sets {
-	private String set;
-	private List<ItemArmor> helmet;
-	private List<ItemArmor> chestplate;
-	private List<ItemArmor> leggings;
-	private List<ItemArmor> boots;
+	private final String name;
+	private final List<ArmorItem> helmets;
+	private final List<ArmorItem> chestplates;
+	private final List<ArmorItem> leggings;
+	private final List<ArmorItem> boots;
 	private int numberOfPieces = 0;
 	
-	public Sets(String set, List<ItemArmor> helmet, List<ItemArmor> chestplate, List<ItemArmor> leggings, List<ItemArmor> boots) {
-		this.set = set;
-		this.helmet = helmet;
-		this.chestplate = chestplate;
+	public Sets(String setName, List<ArmorItem> helmets, List<ArmorItem> chestplates, List<ArmorItem> leggings, List<ArmorItem> boots) {
+		this.name = setName;
+		this.helmets = helmets;
+		this.chestplates = chestplates;
 		this.leggings = leggings;
 		this.boots = boots;
 		
-		if(helmet.size() > 0) {
+		if(helmets.size() > 0) {
 			this.numberOfPieces++;
 		}
-		if(chestplate.size() > 0) {
+		if(chestplates.size() > 0) {
 			this.numberOfPieces++;
 		}
 		if(leggings.size() > 0) {
@@ -33,27 +33,28 @@ public class Sets {
 		}
 	}
 	
-	public List<ItemArmor> getHelmets() {
-		return this.helmet;
+	public List<ArmorItem> getHelmets() {
+		return this.helmets;
 	}
 	
-	public List<ItemArmor> getChestplates() {
-		return this.chestplate;
+	public List<ArmorItem> getChestplates() {
+		return this.chestplates;
 	}
 	
-	public List<ItemArmor> getLeggings() {
+	public List<ArmorItem> getLeggings() {
 		return this.leggings;
 	}
 	
-	public List<ItemArmor> getBoots() {
+	public List<ArmorItem> getBoots() {
 		return this.boots;
 	}
 	
 	public int armorSize() {
 		return this.numberOfPieces;
 	}
-	
-	public String set() {
-		return this.set;
+
+	@Override
+	public String toString() {
+		return this.name;
 	}
 }

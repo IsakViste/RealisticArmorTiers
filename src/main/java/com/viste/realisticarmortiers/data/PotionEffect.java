@@ -1,12 +1,13 @@
 package com.viste.realisticarmortiers.data;
 
 
-public class Potion {
-	public String effect;
+public class PotionEffect {
+	public String id;
 	public int efficiency;
 	public int duration;
-	public Potion(String effect, int efficiency, int duration) {
-		this.effect = effect;
+
+	public PotionEffect(String effect, int efficiency, int duration) {
+		this.id = effect;
 		this.efficiency = efficiency;
 		this.duration = duration;
 	}

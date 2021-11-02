@@ -10,6 +10,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,22 +20,19 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.viste.realisticarmortiers.RealisticArmorTiers;
 import com.viste.realisticarmortiers.Reference;
-import com.viste.realisticarmortiers.data.JsonSets;
 
-import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ArmorItem;
 
 public class EquipmentSetsParser {	
 	public EventEquipmentGlobalVar global;
 	public Armors armors = new Armors();
-	public Tiers tiers = new Tiers();
 	private static final Logger log = LogManager.getLogger(Reference.MODID);
 	
 	public EquipmentSetsParser() {
 		this.global = new EventEquipmentGlobalVar();
 		// Check / Copy the config files into the config folder
-		File configDir = new File(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.CONFIG_PATH));
-		File jsonConfigTiers = new File(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_TIERS_PATH));
-		File jsonConfigSets = new File(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_SETS_PATH));
+		File configDir = new File(RealisticArmorTiers.instance.configFile.getPath() + Reference.CONFIG_PATH);
+		File jsonConfigSets = new File(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_SETS_PATH);
 		
 		// Create config folder
 		if(!configDir.exists()) {
@@ -49,27 +49,20 @@ public class EquipmentSetsParser {
 			log.info("(Config Folder) Found " + Reference.CONFIG_PATH);
 		}
 		
-		// Create TIERS & SETS config
-		copyFile(jsonConfigTiers, Reference.ASSET_TIERS_PATH);
+		// Create SETS config
 		copyFile(jsonConfigSets, Reference.ASSET_SETS_PATH);
 		
 		// JSON File loading
 		try {
 			log.info("(JSON File) Loading");
-			List<JsonTiers> tiersJson = new ArrayList<JsonTiers>();
-			List<JsonSets> sets = new ArrayList<JsonSets>();
+			List<JsonSets> sets;
 			
 			log.info("-> (File Read) Reading JSON files");
 			try {
 				Gson gson = new Gson();
 				
-				// Tiers
-				BufferedReader brTiers = new BufferedReader(new FileReader(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_TIERS_PATH)));
-				Type typeTiers = new TypeToken<List<JsonTiers>>(){}.getType();
-				tiersJson = gson.fromJson(brTiers, typeTiers);
-				
 				// Sets
-				BufferedReader brSets = new BufferedReader(new FileReader(new String(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_SETS_PATH)));
+				BufferedReader brSets = new BufferedReader(new FileReader(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_SETS_PATH));
 				Type typeSets = new TypeToken<List<JsonSets>>(){}.getType();
 				sets = gson.fromJson(brSets, typeSets);
 				
@@ -82,61 +75,20 @@ public class EquipmentSetsParser {
 			log.info("-> (File Read) Reading Success");
 			try {
 				//Make Armors based on JSON
-				List<ItemArmor> helmet = new ArrayList<ItemArmor>();
-				List<ItemArmor> chestplate = new ArrayList<ItemArmor>();
-				List<ItemArmor> leggings = new ArrayList<ItemArmor>();
-				List<ItemArmor> boots = new ArrayList<ItemArmor>();
-				for(int i=0; i < sets.size(); i++) {
-					helmet = new ArrayList<ItemArmor>();
-					chestplate = new ArrayList<ItemArmor>();
-					leggings = new ArrayList<ItemArmor>();
-					boots = new ArrayList<ItemArmor>();
-					
-					//All this should be in a function with another for loop per slot but again... couldn't give a damn
-					for(int j=0; j < tiersJson.size(); j++) {
-						String tiersName = tiersJson.get(j).name; 
-						if(tiersName.equalsIgnoreCase(sets.get(i).helmet)) {
-							helmet = makeItemArmorListFromStringList(tiersJson.get(j).helmet);
-							//we need a better structure but i can't give a damn right now
-						}
-						if(tiersName.equalsIgnoreCase(sets.get(i).chestplate)) {
-							chestplate = makeItemArmorListFromStringList(tiersJson.get(j).chestplate);
-							//we need a better structure but i can't give a damn right now
-						}
-						
-						if(tiersName.equalsIgnoreCase(sets.get(i).leggings)) {
-							leggings = makeItemArmorListFromStringList(tiersJson.get(j).leggings);
-						}
-						
-						if(tiersName.equalsIgnoreCase(sets.get(i).boots)) {
-							boots = makeItemArmorListFromStringList(tiersJson.get(j).boots);
-						}
-					}
-					if(helmet.size() == 0) {
-						helmet = makeItemArmorListFromString(sets.get(i).helmet);						
-					}
-					if(chestplate.size() == 0) {
-						chestplate = makeItemArmorListFromString(sets.get(i).chestplate);						
-					}
-					if(leggings.size() == 0) {
-						leggings = makeItemArmorListFromString(sets.get(i).leggings);						
-					}
-					if(boots.size() == 0) {
-						boots = makeItemArmorListFromString(sets.get(i).boots);						
-					}
-					Armor armor = new Armor(global, new Sets(sets.get(i).name, helmet, chestplate, leggings, boots), sets.get(i).potion, 0);
+				List<ArmorItem> helmet;
+				List<ArmorItem> chestplate;
+				List<ArmorItem> leggings;
+				List<ArmorItem> boots;
+				for (JsonSets set : sets) {
+					helmet = makeItemArmorListFromStringList(set.helmet);
+					chestplate = makeItemArmorListFromStringList(set.chestplate);
+					leggings = makeItemArmorListFromStringList(set.leggings);
+					boots = makeItemArmorListFromStringList(set.boots);
+
+					Armor armor = new Armor(new Sets(set.name, helmet, chestplate, leggings, boots), set.potionEffects);
 					armors.addArmor(armor);
 				}
-				
-				//Make Tiers based on JSON
-				for(int j=0; j < tiersJson.size(); j++) {
-					helmet = makeItemArmorListFromStringList(tiersJson.get(j).helmet);
-					chestplate = makeItemArmorListFromStringList(tiersJson.get(j).chestplate);
-					leggings = makeItemArmorListFromStringList(tiersJson.get(j).leggings);
-					boots = makeItemArmorListFromStringList(tiersJson.get(j).boots);
-					Tier tier = new Tier(global, new Sets(sets.get(j).name, helmet, chestplate, leggings, boots), tiersJson.get(j).speed);
-					tiers.addTier(tier);
-				}
+
 				log.info("-> (Armors) Loading Success");
 				System.out.println(armors);
 			} catch (Exception e) {
@@ -150,24 +102,18 @@ public class EquipmentSetsParser {
 		}
 		log.info("(JSON File) Loading Success");
 	}
-	
-	
-	public List<ItemArmor> makeItemArmorListFromStringList(List<String> armors) {
-		List<ItemArmor> items = new ArrayList<ItemArmor>();
-		for(int i=0; i<armors.size(); i++) {
-			items.add((ItemArmor)ItemArmor.getByNameOrId(armors.get(i)));
+
+	public List<ArmorItem> makeItemArmorListFromStringList(List<String> armors) {
+		List<ArmorItem> items = new ArrayList<>();
+		for (String armor : armors) {
+			RegistryObject<ArmorItem> armorObj = RegistryObject.of(new ResourceLocation(armor), ForgeRegistries.ITEMS);
+			if (!armorObj.isPresent()) {
+				log.warn("-> (Armors) Could not find " + armorObj);
+			}
+			items.add(armorObj.get());
 		}
 		return items;
 	}
-	
-	public List<ItemArmor> makeItemArmorListFromString(String armors) {
-		List<ItemArmor> items = new ArrayList<ItemArmor>();
-		if(armors.length() > 0) {		
-			items.add((ItemArmor)ItemArmor.getByNameOrId(armors));
-		}
-		return items;
-	}
-	
 		
 	// Copy from 'asset' into 'file'
 	void copyFile(File file, String asset) {

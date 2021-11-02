@@ -2,59 +2,58 @@ package com.viste.realisticarmortiers.data;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ArmorItem;
 
 public class Armor {
-	private Sets set = null;
+	private final Sets set;
 	private int armorPieces = 0;
-	private float speed;
-	private int armorPiecesLength = 0;
-	private List<Potion> potions;
+	private final int armorPiecesLength;
+	private final List<PotionEffect> potionEffects;
 	
-	public Armor(EventEquipmentGlobalVar global, Sets sets, List<Potion> potions, float speed) {
+	public Armor(Sets sets, List<PotionEffect> potionEffects) {
 		this.set = sets;		
 		this.armorPiecesLength = this.set.armorSize();
-		this.potions = potions;
-		this.speed = speed;
+		this.potionEffects = potionEffects;
 	}
 	
-	private void checkArmor(EntityPlayerMP player) {		
-		if(this.set.getChestplates().contains(player.getItemStackFromSlot(EntityEquipmentSlot.CHEST).getItem())) {
+	private void checkArmor(ServerPlayerEntity player) {
+		// Maybe use ... to get armors and check against this
+		// player.getArmorSlots()
+
+		ArmorItem chestplate = (ArmorItem)player.getItemBySlot(EquipmentSlotType.CHEST).getItem().getItem();
+		if(this.set.getChestplates().contains(chestplate)) {
 			this.armorPieces++;
 		}
-		
-		if(set.getBoots().contains(player.getItemStackFromSlot(EntityEquipmentSlot.FEET).getItem())) {
+
+		ArmorItem boots = (ArmorItem)player.getItemBySlot(EquipmentSlotType.FEET).getItem().getItem();
+		if(set.getBoots().contains(boots)) {
 			this.armorPieces++;
 		}
-		
-		if(set.getLeggings().contains(player.getItemStackFromSlot(EntityEquipmentSlot.LEGS).getItem())) {
+
+		ArmorItem leggings = (ArmorItem)player.getItemBySlot(EquipmentSlotType.LEGS).getItem().getItem();
+		if(set.getLeggings().contains(leggings)) {
 			this.armorPieces++;
 		}
-		
-		if(set.getHelmets().contains(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem())) {
+
+		ArmorItem helmet = (ArmorItem)player.getItemBySlot(EquipmentSlotType.HEAD).getItem().getItem();
+		if(set.getHelmets().contains(helmet)) {
 			this.armorPieces++;
 		}
 	}
 	
-	public List<Potion> getPotions() {
-		return this.potions;
-	}
-	
-	public float getSpeed() {
-		return this.speed;
+	public List<PotionEffect> getPotionEffects() {
+		return this.potionEffects;
 	}
 	
 	public void resetPieces() {
 		this.armorPieces = 0;
 	}
 	
-	public boolean isFullSet(EntityPlayerMP player) {
+	public boolean isFullSet(ServerPlayerEntity player) {
 		this.resetPieces();
 		this.checkArmor(player);
-		if(this.armorPieces == this.armorPiecesLength) {
-			return true;
-		}
-		return false;
+		return this.armorPieces == this.armorPiecesLength;
 	}
 }

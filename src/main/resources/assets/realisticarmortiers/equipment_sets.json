@@ -1,10 +1,16 @@
 [
 {
   "name": "Godly Assassin",
-  "helmet": "minecraft:leather_helmet",
-  "chestplate": "Mail",
-  "leggings": "Mail",
-  "boots": "minecraft:leather_boots",
+  "helmet":  ["minecraft:leather_helmet"],
+  "chestplate": [
+    "minecraft:chainmail_chestplate",
+    "minecraft:golden_chestplate"
+  ],
+  "leggings": [
+    "minecraft:chainmail_leggings",
+    "minecraft:golden_leggings"
+  ],
+  "boots": ["minecraft:leather_boots"],
   "potion": [
     {
       "effect": "minecraft:speed",
@@ -18,14 +24,14 @@
 },
 {
   "name": "Skilled Assassin",
-  "helmet": "minecraft:leather_helmet",
-  "chestplate": "Leather",
-  "leggings": "Leather",
-  "boots": "minecraft:leather_boots",
+  "helmet": ["minecraft:leather_helmet"],
+  "chestplate": ["minecraft:leather_chestplate"],
+  "leggings": ["minecraft:leather_leggings"],
+  "boots": ["minecraft:leather_boots"],
   "potion": [
     {
       "effect": "minecraft:speed",
-      "efficiency": 3
+      "efficiency": 2
     },
     {
       "effect": "minecraft:jump_boost",
@@ -35,14 +41,14 @@
 },
 {
   "name": "Assassin",
-  "helmet": "minecraft:leather_helmet",
-  "chestplate": "",
-  "leggings": "",
-  "boots": "minecraft:leather_boots",
+  "helmet": ["minecraft:leather_helmet"],
+  "chestplate": [""],
+  "leggings": [""],
+  "boots": ["minecraft:leather_boots"],
   "potion": [
     {
       "effect": "minecraft:speed",
-      "efficiency": 3
+      "efficiency": 1
     }
   ]
 }

@@ -1,52 +1,44 @@
 package com.viste.realisticarmortiers.capability;
 
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.nbt.INBT;
+import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.LazyOptional;
 
-public class ArmorProvider implements ICapabilitySerializable<NBTBase> {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-	 @CapabilityInject(IArmor.class)
+public class ArmorProvider implements ICapabilitySerializable<INBT> {
 
-	 public static final Capability<IArmor> Armor = null;
+	@CapabilityInject(IArmor.class)
+	public static final Capability<IArmor> Armor = null;
 
-	 
-	 private IArmor instance = Armor.getDefaultInstance();
+	private final IArmor instance = Armor.getDefaultInstance();
 
-	 
-	 @Override
-	 public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-	 {
+	@Nonnull
+	@Override
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+		return cap == Armor ? (LazyOptional<T>) this.instance : LazyOptional.empty();
+	}
 
-		 return capability == Armor;
-
-	 }
-
-	 
-	 @Override
-	 public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-	 {
-
-		 return capability == Armor ? Armor.<T> cast(this.instance) : null;
-	 }
+	@Nonnull
+	@Override
+	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap) {
+		 return getCapability(cap, null);
+	}
 
 	 
-	 @Override
-	 public NBTBase serializeNBT()
-	 {
+	@Override
+	public INBT serializeNBT() {
+		return Armor.getStorage().writeNBT(Armor, this.instance, null);
 
-		 return Armor.getStorage().writeNBT(Armor, this.instance, null);
-
-	 }
-
+	}
 	 
-	 @Override
-	 public void deserializeNBT(NBTBase nbt)
-	 {
+	@Override
+	public void deserializeNBT(INBT nbt) {
+		Armor.getStorage().readNBT(Armor, this.instance, null, nbt);
 
-		 Armor.getStorage().readNBT(Armor, this.instance, null, nbt);
-
-	 }
+	}
 }

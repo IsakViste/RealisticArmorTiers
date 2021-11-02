@@ -2,28 +2,23 @@ package com.viste.realisticarmortiers.capability;
 
 import java.util.List;
 
-import com.viste.realisticarmortiers.data.Potion;
-
+import com.viste.realisticarmortiers.data.PotionEffect;
 import net.minecraft.item.ItemStack;
 
 public interface IArmor {
 
+    public List<ItemStack> getItems();
     public void addItem(ItemStack item);
     public void removeItem(ItemStack item);
-    public void addPotionEffect(Potion potion);
-    public void addPotionEffectList(List<Potion> potions);
-    public void removePotionEffect(Potion potion);
+
+    public List<PotionEffect> getPotionEffects();
+    public void addPotionEffect(PotionEffect potionEffect);
+    public void addPotionEffectList(List<PotionEffect> potionEffects);
+    public void removePotionEffect(PotionEffect potionEffect);
+
+    public List<PotionEffect> getUsedPotionEffects();
+    public void addUsedPotionEffect(PotionEffect potionEffect);
+    public void removeUsedPotionEffect(PotionEffect potionEffect);
+
     public void removeAllItems();
-    public void setSpeed(double speed);
-    public void removeUsedPotion(Potion potion);
-    public void addUsedPotion(Potion potion);
-    
-    public List<Potion> getPotionEffect();
-    public List<ItemStack> getItems();
-	public double getSpeed();
-	public List<Potion> getUsedPotionEffect();
-	
-	
-	
-    
 }
