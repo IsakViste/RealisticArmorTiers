@@ -6,11 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.viste.realisticarmortiers.RealisticArmorTiers;
+import com.viste.realisticarmortiers.capability.IArmor;
 import com.viste.realisticarmortiers.data.PotionEffect;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.RegistryObject;
@@ -18,8 +20,6 @@ import net.minecraftforge.fml.server.ServerLifecycleHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import com.google.common.collect.Lists;
-import com.viste.realisticarmortiers.capability.ArmorProvider;
-import com.viste.realisticarmortiers.capability.IArmor;
 import com.viste.realisticarmortiers.data.EquipmentSetsParser;
 import com.viste.realisticarmortiers.logic.Equiped;
 
@@ -44,8 +44,8 @@ public class EventEquipmentSets {
 			int m;
 			List<ItemStack> stacks;
 
-			if (serverPlayerEntity.getCapability(ArmorProvider.Armor).isPresent()) {
-				armors = (IArmor) serverPlayerEntity.getCapability(ArmorProvider.Armor);
+			if (serverPlayerEntity.getCapability(RealisticArmorTiers.CAPABILITY_ARMOR_SET).isPresent()) {
+				armors = (IArmor) serverPlayerEntity.getCapability(RealisticArmorTiers.CAPABILITY_ARMOR_SET);
 				stacks = (List<ItemStack>) serverPlayerEntity.getArmorSlots();
 				int numberOfStack = 0;
 				for (ItemStack stack : stacks) {
@@ -75,7 +75,7 @@ public class EventEquipmentSets {
 			if (foundWhole) {
 				setEffects = armors.getPotionEffects();
 			} else {
-				if (serverPlayerEntity.getCapability(ArmorProvider.Armor).isPresent()) {
+				if (serverPlayerEntity.getCapability(RealisticArmorTiers.CAPABILITY_ARMOR_SET).isPresent()) {
 					if(armors != null) {
 						m = 0;
 						setEffects = armors.getPotionEffects();
@@ -118,7 +118,7 @@ public class EventEquipmentSets {
 					setEffects = sets.armors.getPotionEffects(setNumber);
 				}
 
-				if (serverPlayerEntity.getCapability(ArmorProvider.Armor).isPresent()) {
+				if (serverPlayerEntity.getCapability(RealisticArmorTiers.CAPABILITY_ARMOR_SET).isPresent()) {
 					if (setEffects != null && armors != null) {
 						armors.addPotionEffectList(setEffects);
 					}

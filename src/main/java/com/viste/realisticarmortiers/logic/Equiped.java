@@ -3,7 +3,7 @@ package com.viste.realisticarmortiers.logic;
 import java.util.Iterator;
 import java.util.List;
 
-import com.viste.realisticarmortiers.capability.ArmorProvider;
+import com.viste.realisticarmortiers.RealisticArmorTiers;
 import com.viste.realisticarmortiers.capability.IArmor;
 import com.viste.realisticarmortiers.data.EventEquipmentGlobalVar;
 
@@ -19,8 +19,8 @@ public class Equiped {
 	
 	public static void addPotionEffectsArmor(ServerPlayerEntity player, String potion_effect, int efficiency) {
 		PotionEffect potionEffect = new PotionEffect(potion_effect, efficiency, 0);
-		if(player.getCapability(ArmorProvider.Armor).isPresent()) {
-			IArmor armors = (IArmor) player.getCapability(ArmorProvider.Armor);
+		if(player.getCapability(RealisticArmorTiers.CAPABILITY_ARMOR_SET).isPresent()) {
+			IArmor armors = (IArmor) player.getCapability(RealisticArmorTiers.CAPABILITY_ARMOR_SET);
 			armors.addPotionEffect(potionEffect);
 		}
 		addPotionEffect(player, potionEffect);

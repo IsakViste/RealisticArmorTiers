@@ -1,9 +1,9 @@
 package com.viste.realisticarmortiers.capability;
 
-import java.util.List;
-
 import com.viste.realisticarmortiers.data.PotionEffect;
 import net.minecraft.item.ItemStack;
+
+import java.util.List;
 
 public interface IArmor {
 

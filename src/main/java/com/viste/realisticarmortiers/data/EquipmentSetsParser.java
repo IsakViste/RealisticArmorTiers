@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.viste.realisticarmortiers.RealisticArmorTiers;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.loading.FMLConfig;
@@ -26,7 +27,7 @@ import net.minecraft.item.ArmorItem;
 public class EquipmentSetsParser {	
 	public EventEquipmentGlobalVar global;
 	public Armors armors = new Armors();
-	private static final Logger log = LogManager.getLogger(Reference.MODID);
+	private static final Logger log = RealisticArmorTiers.LOGGER;
 	
 	public EquipmentSetsParser() {
 		this.global = new EventEquipmentGlobalVar();
