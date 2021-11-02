@@ -2,10 +2,9 @@ package com.viste.realisticarmortiers.capability;
 
 import com.viste.realisticarmortiers.data.PotionEffect;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.Capability.IStorage;
@@ -17,60 +16,62 @@ public class ArmorStorage implements IStorage<IArmor> {
     @Nullable
     @Override
     public INBT writeNBT(Capability<IArmor> capability, IArmor instance, Direction side) {
-        NBTTagCompound bigCompoundList = new NBTTagCompound();
-        NBTTagList itemTagList = new NBTTagList();
+        CompoundNBT bigCompoundList = new CompoundNBT();
+        ListNBT itemTagList = new ListNBT();
                 
         for (ItemStack item : instance.getItems()) {
-            NBTTagCompound tag = new NBTTagCompound();
-            tag = item.writeToNBT(tag);
+            CompoundNBT tag = new CompoundNBT();
+            item.setTag(tag);
                     
-            itemTagList.appendTag(tag);
+            itemTagList.add(tag);
         }
         
-        NBTTagList setEffectsTagList = new NBTTagList();
+        ListNBT setEffectsTagList = new ListNBT();
         
         for (PotionEffect potionEffect : instance.getPotionEffects()) {
-        	NBTTagCompound tag = new NBTTagCompound();
-        	tag.setString("effect", potionEffect.id);
-        	tag.setInteger("efficiency", potionEffect.efficiency);
-            setEffectsTagList.appendTag(tag);
+            CompoundNBT tag = new CompoundNBT();
+        	tag.putString("effect", potionEffect.id);
+        	tag.putInt("efficiency", potionEffect.efficiency);
+            setEffectsTagList.add(tag);
         }
 
-        NBTTagList usedSetEffectsTagList = new NBTTagList();
+        ListNBT usedSetEffectsTagList = new ListNBT();
         for (PotionEffect potionEffect : instance.getPotionEffects()) {
-        	NBTTagCompound tag = new NBTTagCompound();
-        	tag.setString("effect", potionEffect.id);
-        	tag.setInteger("efficiency", potionEffect.efficiency);
-        	tag.setInteger("duration", potionEffect.duration);
-            usedSetEffectsTagList.appendTag(tag);
+            CompoundNBT tag = new CompoundNBT();
+        	tag.putString("effect", potionEffect.id);
+        	tag.putInt("efficiency", potionEffect.efficiency);
+        	tag.putInt("duration", potionEffect.duration);
+            usedSetEffectsTagList.add(tag);
         }
         
         
-        bigCompoundList.setTag("items", itemTagList);
-        bigCompoundList.setTag("setEffects", setEffectsTagList);
-        bigCompoundList.setTag("usedSetEffects", usedSetEffectsTagList);
+        bigCompoundList.put("items", itemTagList);
+        bigCompoundList.put("setEffects", setEffectsTagList);
+        bigCompoundList.put("usedSetEffects", usedSetEffectsTagList);
         
         return bigCompoundList;
 	}
 
     @Override
     public void readNBT(Capability<IArmor> capability, IArmor instance, Direction side, INBT nbt) {
-        NBTTagCompound bigCompoundList = (NBTTagCompound) nbt;
-        NBTTagList itemList = bigCompoundList.getTagList("items", net.minecraftforge.common.util.Constants.NBT.TAG_LIST);
+        CompoundNBT bigCompoundList = (CompoundNBT) nbt;
 
-        for (int i = 0; i < itemList.tagCount(); i++) {
-            new ItemStack(itemList.getCompoundTagAt(i));
+        ListNBT itemList = bigCompoundList.getList("items", net.minecraftforge.common.util.Constants.NBT.TAG_LIST);
+        for(INBT inbt : itemList) {
+            CompoundNBT c = (CompoundNBT) inbt;
+            instance.addItem(ItemStack.of(c));
         }
 
-        NBTTagList potionList = bigCompoundList.getTagList("setEffects", net.minecraftforge.common.util.Constants.NBT.TAG_LIST);
-
-        for (int i = 0; i < potionList.tagCount(); i++) {
-            new PotionEffect(potionList.getCompoundTagAt(i).getString("effect"), potionList.getCompoundTagAt(i).getInteger("efficiency"), 0);
+        ListNBT potionList = bigCompoundList.getList("setEffects", net.minecraftforge.common.util.Constants.NBT.TAG_LIST);
+        for(INBT inbt : potionList) {
+            CompoundNBT c = (CompoundNBT) inbt;
+            new PotionEffect(c.getString("effect"), c.getInt("efficiency"), 0);
         }
 
-        NBTTagList usedPotionList = bigCompoundList.getTagList("usedSetEffects", net.minecraftforge.common.util.Constants.NBT.TAG_LIST);
-        for (int i = 0; i < usedPotionList.tagCount(); i++) {
-            new PotionEffect(usedPotionList.getCompoundTagAt(i).getString("effect"), usedPotionList.getCompoundTagAt(i).getInteger("efficiency"), usedPotionList.getCompoundTagAt(i).getInteger("duration"));
+        ListNBT usedPotionList = bigCompoundList.getList("usedSetEffects", net.minecraftforge.common.util.Constants.NBT.TAG_LIST);
+        for(INBT inbt : potionList) {
+            CompoundNBT c = (CompoundNBT) inbt;
+            new PotionEffect(c.getString("effect"), c.getInt("efficiency"), c.getInt("duration"));
         }
     }
 }
