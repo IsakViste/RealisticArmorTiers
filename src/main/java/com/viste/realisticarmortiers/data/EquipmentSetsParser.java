@@ -12,13 +12,13 @@ import java.util.List;
 
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.RegistryObject;
+import net.minecraftforge.fml.loading.FMLConfig;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.viste.realisticarmortiers.RealisticArmorTiers;
 import com.viste.realisticarmortiers.Reference;
 
 import net.minecraft.item.ArmorItem;
@@ -31,8 +31,8 @@ public class EquipmentSetsParser {
 	public EquipmentSetsParser() {
 		this.global = new EventEquipmentGlobalVar();
 		// Check / Copy the config files into the config folder
-		File configDir = new File(RealisticArmorTiers.instance.configFile.getPath() + Reference.CONFIG_PATH);
-		File jsonConfigSets = new File(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_SETS_PATH);
+		File configDir = new File(FMLConfig.defaultConfigPath() + Reference.CONFIG_PATH);
+		File jsonConfigSets = new File(FMLConfig.defaultConfigPath() + Reference.JSON_CONFIG_SETS_PATH);
 		
 		// Create config folder
 		if(!configDir.exists()) {
@@ -62,7 +62,7 @@ public class EquipmentSetsParser {
 				Gson gson = new Gson();
 				
 				// Sets
-				BufferedReader brSets = new BufferedReader(new FileReader(RealisticArmorTiers.instance.configFile.getPath() + Reference.JSON_CONFIG_SETS_PATH));
+				BufferedReader brSets = new BufferedReader(new FileReader(FMLConfig.defaultConfigPath() + Reference.JSON_CONFIG_SETS_PATH));
 				Type typeSets = new TypeToken<List<JsonSets>>(){}.getType();
 				sets = gson.fromJson(brSets, typeSets);
 				
