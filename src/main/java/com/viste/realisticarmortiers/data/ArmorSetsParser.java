@@ -23,7 +23,10 @@ public class ArmorSetsParser {
 
 	private Armors armorSets;
 	private static final Logger log = RealisticArmorTiers.LOGGER;
-	
+
+	/**
+	 * Takes care of creating or finding the JSON from which to load the armor sets
+	 */
 	public ArmorSetsParser() {
 		if (!findOrCreateConfigFolder()) {
 			return;
@@ -42,6 +45,7 @@ public class ArmorSetsParser {
 
 	/**
 	 * Create personal sub-folder in the main config folder to hold our JSONs
+	 * @see assets.realisticarmortiers
 	 */
 	private boolean findOrCreateConfigFolder() {
 		// Check / Copy the config files into the config folder
@@ -68,8 +72,9 @@ public class ArmorSetsParser {
 	}
 
 	/**
-	 * Copy the default equipment_sets JSON file from assets to the config folder
-	 * Will return early if JSON already exists there
+	 * Copy the default JSON equipment_sets.json from assets to the config folder
+	 * Will return early if the JSON file already exists there
+	 * @see assets.realisticarmortiers
 	 */
 	private boolean findJSONOrCopyFromAssets() {
 		File file = new File(JSON_CONFIG_SETS_PATH);
@@ -111,7 +116,8 @@ public class ArmorSetsParser {
 	}
 
 	/**
-	 * Load the Armor sets from the JSON
+	 * Load the Armor sets from the JSON equipment_sets.json
+	 * @see assets.realisticarmortiers
 	 */
 	private Armors loadArmorSetsFromJSON() {
 		Armors armors = new Armors();
@@ -149,13 +155,13 @@ public class ArmorSetsParser {
 					leggings = makeItemArmorListFromStringList(set.leggings);
 					boots = makeItemArmorListFromStringList(set.boots);
 
-					Armor armor = new Armor(new ArmorSet(set.name, helmet, chestplate, leggings, boots), set.potionEffects);
-					armors.addArmor(armor);
+					ArmorSet armorSet = new ArmorSet(set.name, helmet, chestplate, leggings, boots, set.potionEffects);
+					armors.addArmorSet(armorSet);
 				}
 
 				log.info("-> (Armors) Loading Successful. Armor Sets Loaded:");
-				for(Armor armor : armors.getArmors()) {
-					log.info("|-> " + armor);
+				for(ArmorSet armorSet : armors.getArmorSets()) {
+					log.info("|-> " + armorSet);
 				}
 			} catch (Exception e) {
 				log.fatal("-> (Armors) Loading Failure");

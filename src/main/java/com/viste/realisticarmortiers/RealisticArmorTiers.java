@@ -1,6 +1,6 @@
 package com.viste.realisticarmortiers;
 
-import com.viste.realisticarmortiers.data.Armor;
+import com.viste.realisticarmortiers.data.ArmorSet;
 import com.viste.realisticarmortiers.data.ArmorSetsParser;
 import com.viste.realisticarmortiers.data.PotionEffect;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -17,20 +17,15 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.List;
-import java.util.Set;
-
 
 @Mod(RealisticArmorTiers.MODID)
 public class RealisticArmorTiers {
     public static final String MODID = "realisticarmortiers";
     public static final String NAME = "Realistic Armor Tiers";
-    public static final String VERSION = "2.0";
-
-    private final int POTION_DURATION = Integer.MAX_VALUE; // 20 ticks ~= 1 second
 
     public static final Logger LOGGER = LogManager.getLogger(NAME);
 
+    private final int POTION_DURATION = Integer.MAX_VALUE; // 20 ticks ~= 1 second
     private final ArmorSetsParser armorSetsParser;
 
     public RealisticArmorTiers() {
@@ -40,6 +35,10 @@ public class RealisticArmorTiers {
         armorSetsParser = new ArmorSetsParser();
     }
 
+    /**
+     * Function called whenever a player logs in
+     * @param event the PlayerLoggedInEvent fired
+     */
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getPlayer() instanceof ServerPlayerEntity) {
@@ -51,6 +50,10 @@ public class RealisticArmorTiers {
         }
     }
 
+    /**
+     * Function called whenever a living entity changes equipment
+     * @param event the LivingEquipmentChangeEvent fired
+     */
     @SubscribeEvent
     public void onPlayerInventoryChange(LivingEquipmentChangeEvent event) {
         // Must be player, don't care about other living entities
@@ -60,11 +63,15 @@ public class RealisticArmorTiers {
             // > Main and off-hand items support can be added here!
             if (event.getSlot() == EquipmentSlotType.HEAD || event.getSlot() == EquipmentSlotType.CHEST
                     || event.getSlot() == EquipmentSlotType.LEGS || event.getSlot() == EquipmentSlotType.FEET) {
-                Armor armor = armorSetsParser.getArmorSets().getFullSetArmorThatPlayerIsWearing(playerEntity);
+                ArmorSet armorSet = armorSetsParser.getArmorSets().getFullSetArmorThatPlayerIsWearing(playerEntity);
                 playerEntity.removeAllEffects();
-                if (armor != null) {
-                    for (PotionEffect potionEffect : armor.getPotionEffects()) {
-                        Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(potionEffect.id));
+                if (armorSet != null) {
+                    for (PotionEffect potionEffect : armorSet.getPotionEffects()) {
+                        Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(potionEffect.potionID));
+                        if(effect == null) {
+                            LOGGER.warn("(Potion Effect) Could not find " + potionEffect.potionID + " to apply to " + playerEntity.getDisplayName().getString());
+                            continue;
+                        }
                         playerEntity.addEffect(new EffectInstance(effect, POTION_DURATION, potionEffect.efficiency - 1));
                     }
                 }

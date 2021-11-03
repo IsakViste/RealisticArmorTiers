@@ -3,15 +3,20 @@ package com.viste.realisticarmortiers.data;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Armors {
-    private List<Armor> armors = new ArrayList<>();
+    private final List<ArmorSet> armorSets = new ArrayList<>();
 
-    public Armor getFullSetArmorThatPlayerIsWearing(ServerPlayerEntity player) {
-        for(Armor armor : armors) {
+    /**
+     * From the list of armors, get the first (topmost) armor that the player is wearing.
+     * In order from top first to bottom of the equipment_sets.json
+     * @param player the entity of which to check the armor slots
+     * @return the first armor set the player is fully wearing
+     * @see assets.realisticarmortiers
+     */
+    public ArmorSet getFullSetArmorThatPlayerIsWearing(ServerPlayerEntity player) {
+        for(ArmorSet armor : this.armorSets) {
             if (armor.isFullSet(player)) {
                 return armor;
             }
@@ -20,11 +25,18 @@ public class Armors {
         return null;
     }
 
-    public List<Armor> getArmors() {
-        return this.armors;
+    /**
+     * @return the list of all armor sets loaded
+     */
+    public List<ArmorSet> getArmorSets() {
+        return this.armorSets;
     }
 
-    public void addArmor(Armor armor) {
-        this.armors.add(armor);
+    /**
+     * Add an armor set to the list of armors
+     * @param armorSet the armor to add to the list of loaded armors
+     */
+    public void addArmorSet(ArmorSet armorSet) {
+        this.armorSets.add(armorSet);
     }
 }
