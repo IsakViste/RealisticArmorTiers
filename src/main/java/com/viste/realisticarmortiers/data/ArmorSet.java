@@ -1,10 +1,10 @@
 package com.viste.realisticarmortiers.data;
 
-import java.util.List;
-
 import net.minecraft.item.ArmorItem;
 
-public class Sets {
+import java.util.List;
+
+public class ArmorSet {
 	private final String name;
 	private final List<ArmorItem> helmets;
 	private final List<ArmorItem> chestplates;
@@ -12,13 +12,13 @@ public class Sets {
 	private final List<ArmorItem> boots;
 	private int numberOfPieces = 0;
 	
-	public Sets(String setName, List<ArmorItem> helmets, List<ArmorItem> chestplates, List<ArmorItem> leggings, List<ArmorItem> boots) {
+	public ArmorSet(String setName, List<ArmorItem> helmets, List<ArmorItem> chestplates, List<ArmorItem> leggings, List<ArmorItem> boots) {
 		this.name = setName;
 		this.helmets = helmets;
 		this.chestplates = chestplates;
 		this.leggings = leggings;
 		this.boots = boots;
-		
+
 		if(helmets.size() > 0) {
 			this.numberOfPieces++;
 		}
@@ -49,7 +49,7 @@ public class Sets {
 		return this.boots;
 	}
 	
-	public int armorSize() {
+	public int getNumberOfPieces() {
 		return this.numberOfPieces;
 	}
 

@@ -1,45 +1,52 @@
 package com.viste.realisticarmortiers.data;
 
-import java.util.List;
-
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ArmorItem;
+import net.minecraft.item.Item;
+
+import java.util.List;
 
 public class Armor {
-	private final Sets set;
-	private int armorPieces = 0;
-	private final int armorPiecesLength;
+	private int currentlyWornNumberOfArmorPieces = 0;
+
+	private final ArmorSet set;
+	private final int numberOfArmorSetPieces;
 	private final List<PotionEffect> potionEffects;
 	
-	public Armor(Sets sets, List<PotionEffect> potionEffects) {
-		this.set = sets;		
-		this.armorPiecesLength = this.set.armorSize();
+	public Armor(ArmorSet set, List<PotionEffect> potionEffects) {
+		this.set = set;
+		this.numberOfArmorSetPieces = this.set.getNumberOfPieces();
 		this.potionEffects = potionEffects;
 	}
 	
 	private void checkArmor(ServerPlayerEntity player) {
-		// Maybe use ... to get armors and check against this
-		// player.getArmorSlots()
-
-		ArmorItem chestplate = (ArmorItem)player.getItemBySlot(EquipmentSlotType.CHEST).getItem().getItem();
-		if(this.set.getChestplates().contains(chestplate)) {
-			this.armorPieces++;
+		Item item = player.getItemBySlot(EquipmentSlotType.HEAD).getItem().getItem();
+		if(item instanceof ArmorItem) {
+			if (set.getHelmets().contains((ArmorItem) item)) {
+				this.currentlyWornNumberOfArmorPieces++;
+			}
 		}
 
-		ArmorItem boots = (ArmorItem)player.getItemBySlot(EquipmentSlotType.FEET).getItem().getItem();
-		if(set.getBoots().contains(boots)) {
-			this.armorPieces++;
+		item = player.getItemBySlot(EquipmentSlotType.CHEST).getItem().getItem();
+		if(item instanceof ArmorItem) {
+			if(this.set.getChestplates().contains((ArmorItem) item)) {
+				this.currentlyWornNumberOfArmorPieces++;
+			}
 		}
 
-		ArmorItem leggings = (ArmorItem)player.getItemBySlot(EquipmentSlotType.LEGS).getItem().getItem();
-		if(set.getLeggings().contains(leggings)) {
-			this.armorPieces++;
+		item = player.getItemBySlot(EquipmentSlotType.LEGS).getItem().getItem();
+		if(item instanceof ArmorItem) {
+			if (set.getLeggings().contains((ArmorItem) item)) {
+				this.currentlyWornNumberOfArmorPieces++;
+			}
 		}
 
-		ArmorItem helmet = (ArmorItem)player.getItemBySlot(EquipmentSlotType.HEAD).getItem().getItem();
-		if(set.getHelmets().contains(helmet)) {
-			this.armorPieces++;
+		item = player.getItemBySlot(EquipmentSlotType.FEET).getItem().getItem();
+		if(item instanceof ArmorItem) {
+			if (set.getBoots().contains((ArmorItem) item)) {
+				this.currentlyWornNumberOfArmorPieces++;
+			}
 		}
 	}
 	
@@ -48,12 +55,17 @@ public class Armor {
 	}
 	
 	public void resetPieces() {
-		this.armorPieces = 0;
+		this.currentlyWornNumberOfArmorPieces = 0;
 	}
 	
 	public boolean isFullSet(ServerPlayerEntity player) {
 		this.resetPieces();
 		this.checkArmor(player);
-		return this.armorPieces == this.armorPiecesLength;
+		return this.currentlyWornNumberOfArmorPieces == this.numberOfArmorSetPieces;
+	}
+
+	@Override
+	public String toString() {
+		return this.set.toString();
 	}
 }

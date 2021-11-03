@@ -11,13 +11,13 @@
     "minecraft:golden_leggings"
   ],
   "boots": ["minecraft:leather_boots"],
-  "potion": [
+  "potionEffects": [
     {
-      "effect": "minecraft:speed",
+      "id": "minecraft:speed",
       "efficiency": 3
     },
     {
-      "effect": "minecraft:jump_boost",
+      "id": "minecraft:jump_boost",
       "efficiency": 1
     }
   ]
@@ -28,13 +28,13 @@
   "chestplate": ["minecraft:leather_chestplate"],
   "leggings": ["minecraft:leather_leggings"],
   "boots": ["minecraft:leather_boots"],
-  "potion": [
+  "potionEffects": [
     {
-      "effect": "minecraft:speed",
+      "id": "minecraft:speed",
       "efficiency": 2
     },
     {
-      "effect": "minecraft:jump_boost",
+      "id": "minecraft:jump_boost",
       "efficiency": 1
     }
   ]
@@ -45,9 +45,9 @@
   "chestplate": [""],
   "leggings": [""],
   "boots": ["minecraft:leather_boots"],
-  "potion": [
+  "potionEffects": [
     {
-      "effect": "minecraft:speed",
+      "id": "minecraft:speed",
       "efficiency": 1
     }
   ]

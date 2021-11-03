@@ -1,33 +1,30 @@
 package com.viste.realisticarmortiers.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.ServerPlayerEntity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class Armors {
-	
-	private List<Armor> armors = new ArrayList<>();
-		
-	public int checkIfSet(ServerPlayerEntity player) {
-		for(int i = 0; i < armors.size(); i++) {
-			if(armors.get(i).isFullSet(player)) {
-				return i;
-			}
-		}
-		return -1;
-	}
-	
-	public List<PotionEffect> getPotionEffects(int found) {
-		if(found >= 0) {
-			return armors.get(found).getPotionEffects();
-		}
-		return null;
-	}
-	
-	public void addArmor(Armor armor) {
-		this.armors.add(armor);
-	}
-	
-	
+    private List<Armor> armors = new ArrayList<>();
+
+    public Armor getFullSetArmorThatPlayerIsWearing(ServerPlayerEntity player) {
+        for(Armor armor : armors) {
+            if (armor.isFullSet(player)) {
+                return armor;
+            }
+        }
+
+        return null;
+    }
+
+    public List<Armor> getArmors() {
+        return this.armors;
+    }
+
+    public void addArmor(Armor armor) {
+        this.armors.add(armor);
+    }
 }

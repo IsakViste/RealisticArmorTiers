@@ -1,6 +1,5 @@
 package com.viste.realisticarmortiers.data;
 
-
 public class PotionEffect {
 	public String id;
 	public int efficiency;
