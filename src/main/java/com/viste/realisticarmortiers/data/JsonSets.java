@@ -3,12 +3,12 @@ package com.viste.realisticarmortiers.data;
 import java.util.List;
 
 public class JsonSets {
-	public String name;
-	public List<PotionEffect> potionEffects;
-	public List<String> helmet;
-	public List<String> chestplate;
-	public List<String> leggings;
-	public List<String> boots;
+	public final String name;
+	public final List<PotionEffect> potionEffects;
+	public final List<String> helmet;
+	public final List<String> chestplate;
+	public final List<String> leggings;
+	public final List<String> boots;
 
 	/**
 	 * Store data from the JSON in this object

@@ -3,7 +3,6 @@ package com.viste.realisticarmortiers.data;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.viste.realisticarmortiers.RealisticArmorTiers;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
@@ -145,15 +144,15 @@ public class ArmorSetsParser {
 
 			try {
 				//Make Armors based on JSON
-				List<ArmorItem> helmet;
-				List<ArmorItem> chestplate;
-				List<ArmorItem> leggings;
-				List<ArmorItem> boots;
+				List<Item> helmet;
+				List<Item> chestplate;
+				List<Item> leggings;
+				List<Item> boots;
 				for (JsonSets set : sets) {
-					helmet = makeItemArmorListFromStringList(set.helmet);
-					chestplate = makeItemArmorListFromStringList(set.chestplate);
-					leggings = makeItemArmorListFromStringList(set.leggings);
-					boots = makeItemArmorListFromStringList(set.boots);
+					helmet = makeItemListFromStringList(set.helmet);
+					chestplate = makeItemListFromStringList(set.chestplate);
+					leggings = makeItemListFromStringList(set.leggings);
+					boots = makeItemListFromStringList(set.boots);
 
 					ArmorSet armorSet = new ArmorSet(set.name, helmet, chestplate, leggings, boots, set.potionEffects);
 					armors.addArmorSet(armorSet);
@@ -180,11 +179,11 @@ public class ArmorSetsParser {
 	/**
 	 * Convert strings to armor Item
 	 * @param armors list of strings corresponding to the armor id
-	 * @return a list of ArmorItem
+	 * @return a list of Item
 	 * @see ResourceLocation ResourceLocation for the armor id
 	 */
-	private List<ArmorItem> makeItemArmorListFromStringList(List<String> armors) {
-		List<ArmorItem> items = new ArrayList<>();
+	private List<Item> makeItemListFromStringList(List<String> armors) {
+		List<Item> items = new ArrayList<>();
 		for (String armor : armors) {
 			if(armor.isEmpty()) {
 				continue;
@@ -195,7 +194,7 @@ public class ArmorSetsParser {
 				log.error("-> (Armors) Could not find " + armor);
 				continue;
 			}
-			items.add((ArmorItem)armorItem);
+			items.add(armorItem);
 		}
 		return items;
 	}
