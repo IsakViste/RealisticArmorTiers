@@ -3,7 +3,6 @@ package com.viste.realisticarmortiers;
 import com.viste.realisticarmortiers.data.ArmorSet;
 import com.viste.realisticarmortiers.data.ArmorSetsParser;
 import com.viste.realisticarmortiers.data.PotionEffect;
-import com.viste.realisticarmortiers.data.SetEffect;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -18,7 +17,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.ArrayList;
 
@@ -61,14 +59,6 @@ public class RealisticArmorTiers {
                     removeSetEffectFromPlayer(playerEntity, potionEffect);
                 }
             }
-        }
-    }
-
-    @SubscribeEvent
-    public void onPlayerLogIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getPlayer() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity playerEntity = (ServerPlayerEntity)event.getPlayer();
-            playerEntity.removeAllEffects();
         }
     }
 
