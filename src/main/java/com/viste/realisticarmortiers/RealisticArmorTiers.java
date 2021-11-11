@@ -14,10 +14,13 @@ import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 
@@ -28,18 +31,38 @@ public class RealisticArmorTiers {
 
     public static final Logger LOGGER = LogManager.getLogger(NAME);
 
-    private final int POTION_DURATION = Integer.MAX_VALUE; // 20 ticks ~= 1 second
-    private final ArrayList<ItemStack> EMPTY_CURATIVE_ITEMS_LIST = new ArrayList<>();
-    private final ArmorSetsParser armorSetsParser;
+    private static final int POTION_DURATION = Integer.MAX_VALUE; // 20 ticks ~= 1 second
+    private static final ArrayList<ItemStack> EMPTY_CURATIVE_ITEMS_LIST = new ArrayList<>();
+    private static final ArmorSetsParser ARMOR_SETS_PARSER = new ArmorSetsParser();
 
     public RealisticArmorTiers() {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
-        armorSetsParser = new ArmorSetsParser();
+        FMLJavaModLoadingContext.get().getModEventBus().register(StartupCommon.class);
     }
 
+    /**
+     * Reload RealisticArmorTiers equipment_set.json which contains all sets that players can wear to get
+     * potion effects. This allows the player to reload the JSON mid-game, should he/she want to make changes to
+     * the JSON without having to restart the whole client!
+     * @param player the player of which to remove current set effects on reload (prevents keeping infinite effects)
+     *               [OPTIONAL]
+     */
+    public static void reloadJSON(@Nullable ServerPlayerEntity player) {
+        ArmorSet armorSet = ARMOR_SETS_PARSER.getArmorSets().getFullSetArmorThatPlayerIsWearing(player);
+        // Remove set effects of the player before reloading JSON
+        if(player != null && armorSet != null) {
+            removeArmorSetEffectsFromPlayer(player, armorSet);
+        }
 
+        ARMOR_SETS_PARSER.loadArmorSets();
+
+        // Apply set effects to player after reloading JSON
+        armorSet = ARMOR_SETS_PARSER.getArmorSets().getFullSetArmorThatPlayerIsWearing(player);
+        if(player != null && armorSet != null) {
+            applyArmorSetEffectToPlayer(player, armorSet);
+        }
+    }
 
     /**
      * Function called whenever a player logs in
@@ -48,16 +71,12 @@ public class RealisticArmorTiers {
     @SubscribeEvent
     public void onPlayerLogOut(PlayerEvent.PlayerLoggedOutEvent event) {
         if (event.getPlayer() instanceof ServerPlayerEntity) {
-             /* Clear active potion effects of Players joining world, this is to prevent the player of keeping their
-                quasi-infinite potion effect applied by the armor set.
-              */
-            ServerPlayerEntity playerEntity = (ServerPlayerEntity)event.getEntityLiving();
-            ArmorSet armorSet = armorSetsParser.getArmorSets().getFullSetArmorThatPlayerIsWearing(playerEntity);
-            LOGGER.info("Removing set effects of " + armorSet + " from player " + playerEntity.getDisplayName().getString());
-            if (armorSet != null) {
-                for (PotionEffect potionEffect : armorSet.getPotionEffects()) {
-                    removeSetEffectFromPlayer(playerEntity, potionEffect);
-                }
+            // Clear active potion effects of Players joining world, this is to prevent the player of keeping their
+            // quasi-infinite potion effect applied by the armor set.
+            ServerPlayerEntity player = (ServerPlayerEntity)event.getEntityLiving();
+            ArmorSet armorSet = ARMOR_SETS_PARSER.getArmorSets().getFullSetArmorThatPlayerIsWearing(player);
+            if(armorSet != null) {
+                removeArmorSetEffectsFromPlayer(player, armorSet);
             }
         }
     }
@@ -70,7 +89,7 @@ public class RealisticArmorTiers {
     public void onPlayerInventoryChange(LivingEquipmentChangeEvent event) {
         // Must be player, don't care about other living entities
         if (event.getEntityLiving() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity playerEntity = (ServerPlayerEntity)event.getEntityLiving();
+            ServerPlayerEntity player = (ServerPlayerEntity)event.getEntityLiving();
             // We only care about changes to the Head, Chest, Legs and Feet slots
             // > Main andi off-hand items support can be added here!
             if (event.getSlot() == EquipmentSlotType.HEAD || event.getSlot() == EquipmentSlotType.CHEST
@@ -79,46 +98,98 @@ public class RealisticArmorTiers {
                 // Get changed item to find out what ArmorSet the player was wearing before the change
                 // This could probably be much better if we stored per player the active set effect
                 // This is especially heavy if we have many, many armor sets we need to go through
-                ArmorSet oldArmorSet = armorSetsParser.getArmorSets().getOldArmorSetPlayerWasWearing(playerEntity, event.getFrom().getItem().getItem(), event.getSlot());
+                ArmorSet oldArmorSet = ARMOR_SETS_PARSER.getArmorSets().getOldArmorSetPlayerWasWearing(player, event.getFrom().getItem().getItem(), event.getSlot());
                 if (oldArmorSet != null) {
-                    // Remove potion effects that were added by the previous ArmorSet
-                    for (PotionEffect potionEffect : oldArmorSet.getPotionEffects()) {
-                        removeSetEffectFromPlayer(playerEntity, potionEffect);
-                    }
+                    removeArmorSetEffectsFromPlayer(player, oldArmorSet);
                 }
 
                 // Get the current equipped ArmorSet from the armor slots
                 // Again possibly heavy operation if we have many, many armors sets we need to go through
-                ArmorSet armorSet = armorSetsParser.getArmorSets().getFullSetArmorThatPlayerIsWearing(playerEntity);
-                if (armorSet != null) {
-                    // Apply all the potion effects the set gives to the player
-                    for (PotionEffect potionEffect : armorSet.getPotionEffects()) {
-                        // Get the Effect from the registry of Potions
-                        Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(potionEffect.id));
-                        if(effect == null) {
-                            LOGGER.warn("(Potion Effect) Could not find " + potionEffect.id + " to apply to " + playerEntity.getDisplayName().getString());
-                            continue;
-                        }
-
-                        // Create new effect instance with the duration and efficiency/amplitude
-                        EffectInstance effectInstance = new EffectInstance(effect, POTION_DURATION, potionEffect.efficiency - 1);
-
-                        // Make so that no item can cure the effect (milk bucket is by default, so we remove it)
-                        effectInstance.setCurativeItems(EMPTY_CURATIVE_ITEMS_LIST);
-                        playerEntity.addEffect(effectInstance);
-                    }
+                ArmorSet armorSet = ARMOR_SETS_PARSER.getArmorSets().getFullSetArmorThatPlayerIsWearing(player);
+                if(armorSet != null) {
+                    applyArmorSetEffectToPlayer(player, armorSet);
                 }
             }
         }
     }
 
     /**
+     * Apply the set effects of an ArmorSet to a player
+     * @param player the player to which apply the set effect [REQUIRED]
+     * @param armorSet the armor set from which to get the set effects [REQUIRED]
+     */
+    private static void applyArmorSetEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSet armorSet) {
+        // Apply all the potion effects the set gives to the player
+        for (PotionEffect potionEffect : armorSet.getPotionEffects()) {
+            // Get the Effect from the registry of Potions
+            Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(potionEffect.id));
+            if (effect == null) {
+                LOGGER.warn("(Potion Effect) Could not find " + potionEffect.id + " to apply to " + player.getDisplayName().getString());
+                continue;
+            }
+
+            // Create new effect instance with the duration and efficiency/amplitude
+            EffectInstance playerEffect = player.getEffect(effect);
+            EffectInstance effectInstance = createEffectInstance(potionEffect, effect, playerEffect);
+
+            // Add effect to the player
+            player.addEffect(effectInstance);
+        }
+    }
+
+    /**
+     * Create an effect instance which we can then apply to the player
+     * @param potionEffect the potion effect from the armor set containing the duration and efficiency/amplifier [REQUIRED]
+     * @param effect the minecraft Effect corresponding to the potionEffect ID [REQUIRED]
+     * @param playerEffect the effect of same ID already present on the player [OPTIONAL]
+     * @return the new effect instance
+     */
+    private static EffectInstance createEffectInstance(@Nonnull PotionEffect potionEffect, @Nonnull Effect effect, @Nullable EffectInstance playerEffect) {
+        EffectInstance effectInstance;
+        if (playerEffect == null) {
+            // If no existing effect already exists on the player, create a new one
+            effectInstance = new EffectInstance(effect, POTION_DURATION, potionEffect.efficiency - 1);
+            // Make so that no item can cure the effect (milk bucket is by default, so we remove it)
+            effectInstance.setCurativeItems(EMPTY_CURATIVE_ITEMS_LIST);
+        } else if (playerEffect.getAmplifier() < potionEffect.efficiency - 1) {
+            // If an existing effect already exists on player but is less effective,
+            // create new effect and add existing effect to the list of hidden effects
+            // Make so that no item can cure the new/parent effect
+            playerEffect.setCurativeItems(EMPTY_CURATIVE_ITEMS_LIST);
+            effectInstance = new EffectInstance(effect, POTION_DURATION, potionEffect.efficiency - 1,
+                    false, true, true, playerEffect);
+        } else {
+            // Otherwise, if an effect already exists and is of equal effectiveness or higher,
+            // create new effect and add it to the hidden effects of the existing effect
+            effectInstance = new EffectInstance(effect, POTION_DURATION, potionEffect.efficiency - 1);
+            // Make so that no item can cure the new/hidden effect
+            effectInstance.setCurativeItems(EMPTY_CURATIVE_ITEMS_LIST);
+            effectInstance = new EffectInstance(playerEffect.getEffect(), playerEffect.getDuration(),
+                    playerEffect.getAmplifier(), playerEffect.isAmbient(), playerEffect.isVisible(), playerEffect.showIcon(), effectInstance);
+        }
+
+        return effectInstance;
+    }
+
+    /**
+     * Remove all set effects of a specific ArmorSet from a player
+     * @param player the player to which remove the set effects [REQUIRED]
+     * @param armorSet the armor set from which to get the set effects [REQUIRED]
+     */
+    private static void removeArmorSetEffectsFromPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSet armorSet) {
+        LOGGER.info("Removing set effects of " + armorSet + " from player " + player.getDisplayName().getString());
+        for (PotionEffect potionEffect : armorSet.getPotionEffects()) {
+            removeSetEffectFromPlayer(player, potionEffect);
+        }
+    }
+
+    /**
      * Remove a set effect that the player has been given by wearing a full set
      * If the player does not have the potion effect applied, log it and do nothing
-     * @param player the player of which to remove the effect
-     * @param potionEffect the potion effect to remove
+     * @param player the player of which to remove the effect [REQUIRED]
+     * @param potionEffect the potion effect to remove [REQUIRED]
      */
-    private void removeSetEffectFromPlayer(ServerPlayerEntity player, PotionEffect potionEffect) {
+    private static void removeSetEffectFromPlayer(@Nonnull ServerPlayerEntity player, @Nonnull PotionEffect potionEffect) {
         // Get Effect from the registry of Potions
         Effect effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(potionEffect.id));
         if(effect == null) {

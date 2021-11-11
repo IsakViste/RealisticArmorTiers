@@ -35,11 +35,15 @@ public class ArmorSetsParser {
 			return;
 		}
 
-		this.armorSets = loadArmorSetsFromJSON();
+		loadArmorSets();
 	}
 
 	public Armors getArmorSets() {
 		return this.armorSets;
+	}
+
+	public void loadArmorSets() {
+		this.armorSets = loadArmorSetsFromJSON();
 	}
 
 	/**
@@ -138,41 +142,34 @@ public class ArmorSetsParser {
 			} catch (Exception e) {
 				log.fatal("-> (File Read) Reading Failure");
 				log.fatal(e);
-				return null;
+				return armors;
 			}
 			log.info("-> (File Read) Reading Success");
 
-			try {
-				//Make Armors based on JSON
-				List<Item> helmet;
-				List<Item> chestplate;
-				List<Item> leggings;
-				List<Item> boots;
-				for (JsonSets set : sets) {
-					helmet = makeItemListFromStringList(set.helmet);
-					chestplate = makeItemListFromStringList(set.chestplate);
-					leggings = makeItemListFromStringList(set.leggings);
-					boots = makeItemListFromStringList(set.boots);
+			//Make Armors based on JSON
+			List<Item> helmet;
+			List<Item> chestplate;
+			List<Item> leggings;
+			List<Item> boots;
+			for (JsonSets set : sets) {
+				helmet = makeItemListFromStringList(set.helmet);
+				chestplate = makeItemListFromStringList(set.chestplate);
+				leggings = makeItemListFromStringList(set.leggings);
+				boots = makeItemListFromStringList(set.boots);
 
-					ArmorSet armorSet = new ArmorSet(set.name, helmet, chestplate, leggings, boots, set.potionEffects);
-					armors.addArmorSet(armorSet);
-				}
-
-				log.info("-> (Armors) Loading Successful. Armor Sets Loaded:");
-				for(ArmorSet armorSet : armors.getArmorSets()) {
-					log.info("|-> " + armorSet);
-				}
-			} catch (Exception e) {
-				log.fatal("-> (Armors) Loading Failure");
-				log.fatal(e);
+				ArmorSet armorSet = new ArmorSet(set.name, helmet, chestplate, leggings, boots, set.potionEffects);
+				armors.addArmorSet(armorSet);
+				log.info("|-> [" + armorSet + "] added");
 			}
+
+			log.info("-> (Armors) Loading Successful.");
 		} catch (Exception e) {
 			log.fatal("(JSON File) Loading Failure");
 			log.fatal(e);
-			return null;
+			return armors;
 		}
-		log.info("(JSON File) Loading Success");
 
+		log.info("(JSON File) Loading Success");
 		return armors;
 	}
 
