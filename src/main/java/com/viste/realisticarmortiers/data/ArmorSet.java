@@ -48,6 +48,10 @@ public class ArmorSet {
 		}
 	}
 
+	public String getName() {
+		return this.name;
+	}
+
 	/**
 	 * @return List of potion effects to apply when wearing the whole set
 	 */

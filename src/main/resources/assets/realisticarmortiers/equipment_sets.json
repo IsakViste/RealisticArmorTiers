@@ -14,11 +14,11 @@
   "potionEffects": [
     {
       "id": "minecraft:speed",
-      "efficiency": 3
+      "amplifier": 3
     },
     {
       "id": "minecraft:jump_boost",
-      "efficiency": 1
+      "amplifier": 1
     }
   ]
 },
@@ -31,11 +31,11 @@
   "potionEffects": [
     {
       "id": "minecraft:speed",
-      "efficiency": 2
+      "amplifier": 2
     },
     {
       "id": "minecraft:jump_boost",
-      "efficiency": 1
+      "amplifier": 1
     }
   ]
 },
@@ -48,7 +48,7 @@
   "potionEffects": [
     {
       "id": "minecraft:speed",
-      "efficiency": 1
+      "amplifier": 1
     }
   ]
 }
