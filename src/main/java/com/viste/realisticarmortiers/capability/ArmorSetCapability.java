@@ -142,7 +142,7 @@ public class ArmorSetCapability {
                 instance.setSetID(setID);
 
                 // Get set effects from the NBT to add to the instance
-                ListNBT setEffectsListNBT = ((CompoundNBT)nbt).getList("setEffects", Constants.NBT.TAG_LIST);
+                ListNBT setEffectsListNBT = ((CompoundNBT)nbt).getList("setEffects", Constants.NBT.TAG_COMPOUND);
                 for (int i = 0; i < setEffectsListNBT.size(); i++) {
                     CompoundNBT compoundNBT = setEffectsListNBT.getCompound(i);
                     PotionEffect setEffect = new PotionEffect(
@@ -153,7 +153,7 @@ public class ArmorSetCapability {
                 }
 
                 // Get used potion effects from the NBT to add to the instance
-                ListNBT usedPotionEffectsListNBT = ((CompoundNBT)nbt).getList("usedPotionEffects", Constants.NBT.TAG_LIST);
+                ListNBT usedPotionEffectsListNBT = ((CompoundNBT)nbt).getList("usedPotionEffects", Constants.NBT.TAG_COMPOUND);
                 for (int i = 0; i < usedPotionEffectsListNBT.size(); i++) {
                     CompoundNBT compoundNBT = usedPotionEffectsListNBT.getCompound(i);
                     PotionEffect setEffect = new PotionEffect(

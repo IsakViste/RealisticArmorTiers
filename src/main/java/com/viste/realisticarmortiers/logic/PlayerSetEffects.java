@@ -57,14 +57,12 @@ public class PlayerSetEffects {
                 return false;
             }
 
-            // If effect with lower amplifier already exists, store existing effect in used effects, and add new effect
-            if (playerEffect.getAmplifier() < setEffect.getAmplifier()) {
-                PotionEffect usedPotionEffect = new PotionEffect(playerEffect);
-                armorSetCapability.addUsedPotionEffect(usedPotionEffect);
-                if (RealisticArmorTiers.DEBUG_MODE) {
-                    RealisticArmorTiers.LOGGER.debug("Added " + playerEffect + " to used potion effects. " +
-                            "Amplifier is less than " + setEffect + " on " + player.getDisplayName().getString());
-                }
+            // If effect with lower or equal amplifier already exists, store existing effect in used effects, and add new effect
+            PotionEffect usedPotionEffect = new PotionEffect(playerEffect);
+            armorSetCapability.addUsedPotionEffect(usedPotionEffect);
+            if (RealisticArmorTiers.DEBUG_MODE) {
+                RealisticArmorTiers.LOGGER.debug("Added " + playerEffect + " to used potion effects. " +
+                        "Amplifier is less or equal than " + setEffect + " on " + player.getDisplayName().getString());
             }
         }
 
