@@ -8,6 +8,7 @@ import com.viste.realisticarmortiers.data.Armors;
 import com.viste.realisticarmortiers.logic.EquippedArmorSetEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -56,27 +57,40 @@ public class EventEquipmentSets {
      */
     @SubscribeEvent
     public void onPlayerInventoryChange(LivingEquipmentChangeEvent event) {
+        if(event.getSlot().getType() != EquipmentSlotType.Group.ARMOR) {
+            // If we did not change armor slot ( = changed main/off-hand) return early, for now not part of sets
+            return;
+        }
+
         LivingEntity entity;
-        if ((entity = event.getEntityLiving()) instanceof ServerPlayerEntity) {
-            ServerPlayerEntity player = (ServerPlayerEntity) entity;
-            ArmorSetCapability armorSetCapability = player.getCapability(CapabilityArmorSet.CAPABILITY_ARMOR_SET).orElse(null);
-            if (armorSetCapability == null) return;
+        if (!((entity = event.getEntityLiving()) instanceof ServerPlayerEntity)) {
+            return;
+        }
 
-            Armors armors = RealisticArmorTiers.ARMOR_SETS_PARSER.getArmorSets();
-            for (ArmorSet armorSet : armors.getArmorSets()) {
-                if (armorSet.isFullSet(player)) {
+        ServerPlayerEntity player = (ServerPlayerEntity) entity;
+        ArmorSetCapability armorSetCapability = player.getCapability(CapabilityArmorSet.CAPABILITY_ARMOR_SET).orElse(null);
+        if (armorSetCapability == null) {
+            return;
+        }
+
+        Armors armors = RealisticArmorTiers.ARMOR_SETS_PARSER.getArmorSets();
+        for (ArmorSet armorSet : armors.getArmorSets()) {
+            if (armorSet.isFullSet(player)) {
+                if (armorSet.getName() == armorSetCapability.getSetID()) {
                     // If player is still wearing same set, don't do anything
-                    if (armorSet.getName() == armorSetCapability.getSetID()) {
-                        return;
-                    }
-
-                    EquippedArmorSetEffects.applyArmorSetEffectToPlayer(player, armorSetCapability, armorSet);
                     return;
                 }
-            }
 
-            EquippedArmorSetEffects.clearArmorSetEffectFromPlayer(player, armorSetCapability);
+                EquippedArmorSetEffects.applyArmorSetToPlayer(player, armorSetCapability, armorSet);
+                EquippedArmorSetEffects.applyUsedPotionEffectsToPlayer(player, armorSetCapability, true);
+                return;
+            }
         }
+
+        // If no sets is equipped, clear the set effects from the player and add all used potion effects back to player
+        // (which also removes all used potion effects from our capability manager)
+        EquippedArmorSetEffects.clearArmorSetFromPlayer(player, armorSetCapability);
+        EquippedArmorSetEffects.applyUsedPotionEffectsToPlayer(player, armorSetCapability, false);
     }
 
     /**

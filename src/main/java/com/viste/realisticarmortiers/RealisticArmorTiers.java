@@ -19,6 +19,7 @@ public class RealisticArmorTiers {
     public static final String NAME = "Realistic Armor Tiers";
 
     public static final Logger LOGGER = LogManager.getLogger(NAME);
+    public static final boolean DEBUG_MODE = true;
 
     public static final ArmorSetsParser ARMOR_SETS_PARSER = new ArmorSetsParser();
 

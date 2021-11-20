@@ -12,7 +12,9 @@ import org.apache.logging.log4j.Logger;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ArmorSetsParser {
 	public static final String CONFIG_PATH = FMLPaths.GAMEDIR.get() + "/config/" + RealisticArmorTiers.MODID + "/";
@@ -146,20 +148,31 @@ public class ArmorSetsParser {
 			}
 			log.info("-> (File Read) Reading Success");
 
-			//Make Armors based on JSON
+			// Make Armors based on JSON
+			Set<String> ids = new HashSet<>();
 			List<Item> helmet;
 			List<Item> chestplate;
 			List<Item> leggings;
 			List<Item> boots;
+
+			log.info("-> (Armors) Loading Sets");
 			for (JsonSets set : sets) {
+				log.info("| [" + set.id + "]");
+				if(set.id.isEmpty() || !ids.add(set.id)) {
+					log.warn("|---> ID: " + set.id + " already exists or is empty! " +
+							"This set is not loaded, make sure no sets have the same ID in equipment_sets.json");
+					continue;
+				}
 				helmet = makeItemListFromStringList(set.helmet);
 				chestplate = makeItemListFromStringList(set.chestplate);
 				leggings = makeItemListFromStringList(set.leggings);
 				boots = makeItemListFromStringList(set.boots);
 
-				ArmorSet armorSet = new ArmorSet(set.name, helmet, chestplate, leggings, boots, set.potionEffects);
+				set.validatePotionEffects();
+
+				ArmorSet armorSet = new ArmorSet(set.id, helmet, chestplate, leggings, boots, set.potionEffects);
 				armors.addArmorSet(armorSet);
-				log.info("|-> [" + armorSet + "] added");
+				log.info("|-> successfully added");
 			}
 
 			log.info("-> (Armors) Loading Successful.");

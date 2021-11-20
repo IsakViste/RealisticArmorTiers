@@ -167,6 +167,13 @@ public class ArmorSet {
 
 	@Override
 	public String toString() {
-		return this.name;
+		return "ArmorSet{" +
+				"name='" + name + '\'' +
+				", helmets=" + helmets +
+				", chestplates=" + chestplates +
+				", leggings=" + leggings +
+				", boots=" + boots +
+				", potionEffects=" + potionEffects +
+				'}';
 	}
 }

@@ -1,6 +1,6 @@
 [
 {
-  "name": "Godly Assassin",
+  "id": "Godly Assassin",
   "helmet":  ["minecraft:leather_helmet"],
   "chestplate": [
     "minecraft:chainmail_chestplate",
@@ -23,7 +23,7 @@
   ]
 },
 {
-  "name": "Skilled Assassin",
+  "id": "Skilled Assassin",
   "helmet": ["minecraft:leather_helmet"],
   "chestplate": ["minecraft:leather_chestplate"],
   "leggings": ["minecraft:leather_leggings"],
@@ -40,7 +40,7 @@
   ]
 },
 {
-  "name": "Assassin",
+  "id": "Assassin",
   "helmet": ["minecraft:leather_helmet"],
   "chestplate": [""],
   "leggings": [""],

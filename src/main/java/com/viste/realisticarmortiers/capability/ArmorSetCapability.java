@@ -9,14 +9,13 @@ import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class ArmorSetCapability {
-    private String setID;
-    private final List<PotionEffect> setEffects = new ArrayList<>();
-    private final List<PotionEffect> usedPotionEffects = new ArrayList<>();
+    private String setID = "";
+    private final Set<PotionEffect> setEffects = new HashSet<>();
+    private final Map<PotionEffect, PotionEffect> usedPotionEffects = new HashMap<>();
 
     public static ArmorSetCapability createADefaultInstance() {
         return new ArmorSetCapability();
@@ -42,7 +41,7 @@ public class ArmorSetCapability {
     }
 
     // Set Effects
-    public List<PotionEffect> getSetEffects() {
+    public Set<PotionEffect> getSetEffects() {
         return this.setEffects;
     }
 
@@ -50,7 +49,7 @@ public class ArmorSetCapability {
         this.setEffects.add(setEffect);
     }
 
-    public void addSetEffectList(List<PotionEffect> setEffects) {
+    public void addSetEffects(List<PotionEffect> setEffects) {
         this.setEffects.addAll(setEffects);
     }
 
@@ -63,16 +62,34 @@ public class ArmorSetCapability {
     }
 
     // Used Potion Effects
-    public List<PotionEffect> getUsedPotionEffects() {
-        return this.usedPotionEffects;
+    public Set<PotionEffect> getUsedPotionEffects() {
+        return this.usedPotionEffects.keySet();
     }
 
     public void addUsedPotionEffect(PotionEffect usedPotionEffect) {
-        this.usedPotionEffects.add(usedPotionEffect);
+        PotionEffect storedPotionEffect = this.usedPotionEffects.get(usedPotionEffect);
+        if (storedPotionEffect != null && storedPotionEffect.getDuration() >= usedPotionEffect.getDuration()) {
+            // If there is a stored potionEffect, and it has longer duration, don't store new one, just skip it
+            return;
+        }
+
+        this.usedPotionEffects.put(usedPotionEffect, usedPotionEffect);
+    }
+
+    public void addUsedPotionEffects(Set<PotionEffect> usedPotionEffects) {
+        for (PotionEffect usedPotionEffect : usedPotionEffects) {
+            addUsedPotionEffect(usedPotionEffect);
+        }
     }
 
     public void removeUsedPotionEffect(PotionEffect usedPotionEffect) {
         this.usedPotionEffects.remove(usedPotionEffect);
+    }
+
+    public void removeUsedPotionEffects(Set<PotionEffect> usedPotionEffects) {
+        for (PotionEffect usedPotionEffect : usedPotionEffects) {
+            removeUsedPotionEffect(usedPotionEffect);
+        }
     }
 
     public void removeAllUsedPotionEffects() {
@@ -119,7 +136,7 @@ public class ArmorSetCapability {
 
         @Override
         public void readNBT(Capability<ArmorSetCapability> capability, ArmorSetCapability instance, Direction side, INBT nbt) {
-            if (nbt.getType() == CompoundNBT.TYPE) {
+            if (nbt != null && nbt.getType() == CompoundNBT.TYPE) {
                 // Get set ID from the NBT to add to the instance
                 String setID = ((CompoundNBT)nbt).getString("setID");
                 instance.setSetID(setID);
