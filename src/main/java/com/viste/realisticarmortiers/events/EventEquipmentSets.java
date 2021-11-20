@@ -5,6 +5,7 @@ import com.viste.realisticarmortiers.capability.ArmorSetCapability;
 import com.viste.realisticarmortiers.capability.CapabilityArmorSet;
 import com.viste.realisticarmortiers.data.ArmorSet;
 import com.viste.realisticarmortiers.data.Armors;
+import com.viste.realisticarmortiers.data.PotionEffect;
 import com.viste.realisticarmortiers.logic.EquippedArmorSetEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -12,6 +13,8 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.List;
 
 public class EventEquipmentSets {
     private static int playerPotionAddedIgnore = 0;
@@ -76,13 +79,15 @@ public class EventEquipmentSets {
         Armors armors = RealisticArmorTiers.ARMOR_SETS_PARSER.getArmorSets();
         for (ArmorSet armorSet : armors.getArmorSets()) {
             if (armorSet.isFullSet(player)) {
-                if (armorSet.getName() == armorSetCapability.getSetID()) {
+                if (armorSet.getName().equals(armorSetCapability.getSetID())) {
                     // If player is still wearing same set, don't do anything
                     return;
                 }
 
-                EquippedArmorSetEffects.applyArmorSetToPlayer(player, armorSetCapability, armorSet);
-                EquippedArmorSetEffects.applyUsedPotionEffectsToPlayer(player, armorSetCapability, true);
+                // Clear set effects stored in the capability and store new SetID
+                EquippedArmorSetEffects.clearArmorSetFromPlayer(player, armorSetCapability, armorSet.getName());
+                List<PotionEffect> conflictingPotionEffects = EquippedArmorSetEffects.applyArmorSetToPlayer(player, armorSetCapability, armorSet);
+                EquippedArmorSetEffects.applyUsedPotionEffectsToPlayer(player, armorSetCapability, conflictingPotionEffects);
                 return;
             }
         }
@@ -90,7 +95,7 @@ public class EventEquipmentSets {
         // If no sets is equipped, clear the set effects from the player and add all used potion effects back to player
         // (which also removes all used potion effects from our capability manager)
         EquippedArmorSetEffects.clearArmorSetFromPlayer(player, armorSetCapability);
-        EquippedArmorSetEffects.applyUsedPotionEffectsToPlayer(player, armorSetCapability, false);
+        EquippedArmorSetEffects.applyUsedPotionEffectsToPlayer(player, armorSetCapability, null);
     }
 
     /**

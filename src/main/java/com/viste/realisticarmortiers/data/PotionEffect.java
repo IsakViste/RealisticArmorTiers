@@ -79,7 +79,7 @@ public class PotionEffect {
 		String string = "effect." + this.id.replace(":", ".");
 
 		if (this.getAmplifier() > 0) {
-			string += " x " + this.getAmplifier();
+			string += " x " + this.amplifier;
 		}
 
 		if (this.duration > 0) {

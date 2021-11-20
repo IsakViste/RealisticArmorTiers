@@ -10,6 +10,7 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -24,10 +25,15 @@ public class PlayerSetEffects {
      * @param armorSetCapability the armor set capability manager of the player
      * @param setEffects the list of set effects to add to the player
      */
-    public static void addSetEffectsToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSetCapability armorSetCapability, @Nonnull List<PotionEffect> setEffects) {
+    public static List<PotionEffect> addSetEffectsToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSetCapability armorSetCapability, @Nonnull List<PotionEffect> setEffects) {
+        List<PotionEffect> conflictingPotionEffects = new ArrayList<>();
         for (PotionEffect setEffect : setEffects) {
-            addSetEffectToPlayer(player, armorSetCapability, setEffect);
+            PotionEffect conflictingEffect = addSetEffectToPlayer(player, armorSetCapability, setEffect);
+            if (conflictingEffect != null) {
+                conflictingPotionEffects.add(conflictingEffect);
+            }
         }
+        return conflictingPotionEffects;
     }
 
     /**
@@ -38,7 +44,8 @@ public class PlayerSetEffects {
      * @param setEffect the set effect to add to the player
      * @return true if successfully added the set effect to player
      */
-    public static boolean addSetEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSetCapability armorSetCapability, @Nonnull PotionEffect setEffect) {
+    @Nullable
+    public static PotionEffect addSetEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSetCapability armorSetCapability, @Nonnull PotionEffect setEffect) {
         EffectInstance effectInstance = setEffect.effectInstance();
         effectInstance.setCurativeItems(EMPTY_CURATIVE_ITEMS_LIST);
 
@@ -47,6 +54,7 @@ public class PlayerSetEffects {
         }
 
         EffectInstance playerEffect = player.getEffect(setEffect.getEffect());
+        PotionEffect usedPotionEffect = null;
         if (playerEffect != null) {
             // If effect with higher amplifier already exists, don't do anything
             if (playerEffect.getAmplifier() > setEffect.getAmplifier()) {
@@ -54,11 +62,11 @@ public class PlayerSetEffects {
                     RealisticArmorTiers.LOGGER.debug("Did not add Set Effect " + setEffect +
                             ", another more powerful already exist on " + player.getDisplayName().getString());
                 }
-                return false;
+                return null;
             }
 
             // If effect with lower or equal amplifier already exists, store existing effect in used effects, and add new effect
-            PotionEffect usedPotionEffect = new PotionEffect(playerEffect);
+            usedPotionEffect = new PotionEffect(playerEffect);
             armorSetCapability.addUsedPotionEffect(usedPotionEffect);
             if (RealisticArmorTiers.DEBUG_MODE) {
                 RealisticArmorTiers.LOGGER.debug("Added " + playerEffect + " to used potion effects. " +
@@ -71,10 +79,10 @@ public class PlayerSetEffects {
             EventEquipmentSets.decrementPlayerPotionAddedIgnore();
             RealisticArmorTiers.LOGGER.warn("Could not apply set effect " + effectInstance + " to "
                     + player.getDisplayName().getString());
-            return false;
+            return null;
         }
 
-        return true;
+        return usedPotionEffect;
     }
 
     /**
@@ -90,12 +98,11 @@ public class PlayerSetEffects {
 
     /**
      * Remove a set effect from the player.
-     * Only remove if the player has that effect applied already, and of the same amplifier. Otherwise, return false.
+     * Only remove if the player has that effect applied already, and of the same amplifier.
      * @param player the target player to remove the effect from
      * @param setEffect the set effect to remove from the player
-     * @return true if successfully removed the set effect from the player
      */
-    public static boolean removeSetEffectFromPlayer(@Nonnull ServerPlayerEntity player, @Nonnull PotionEffect setEffect) {
+    public static void removeSetEffectFromPlayer(@Nonnull ServerPlayerEntity player, @Nonnull PotionEffect setEffect) {
         Effect effect = setEffect.getEffect();
         EffectInstance playerEffect = player.getEffect(effect);
         if (playerEffect != null) {
@@ -110,9 +117,9 @@ public class PlayerSetEffects {
                     EventEquipmentSets.decrementPlayerPotionRemovedIgnore();
                     RealisticArmorTiers.LOGGER.warn("Could not remove set effect " + playerEffect + " from "
                             + player.getDisplayName().getString());
-                    return false;
+                    return;
                 }
-                return true;
+                return;
             } else if (playerEffect.getAmplifier() > setEffect.getAmplifier()) {
                 if (RealisticArmorTiers.DEBUG_MODE) {
                     RealisticArmorTiers.LOGGER.debug("Player effect " + playerEffect
@@ -127,14 +134,13 @@ public class PlayerSetEffects {
                 }
             }
 
-            // If not of same amplifier, return false
-            return false;
+            // Not of same amplifier, therefore we don't want to remove it
+            return;
         }
 
         // If the effect is not present on the player
         RealisticArmorTiers.LOGGER.warn("Could not remove set effect " + setEffect + " from " +
                 player.getDisplayName().getString() + ". Effect not already present!");
-        return false;
     }
 
     /**
@@ -149,17 +155,16 @@ public class PlayerSetEffects {
     }
 
     /**
-     * Add a potion effect to the player. If the duration is 0 or negative, or couldn't add the effect to the player, return false.
+     * Add a potion effect to the player. If the duration is 0 or negative don't add it (should never happen)
      * @param player the target player to add the effect too
      * @param usedPotionEffect the potion effect to add to the player
-     * @return true if successfully added the potion effect to the player
      */
-    public static boolean addUsedPotionEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull PotionEffect usedPotionEffect) {
+    public static void addUsedPotionEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull PotionEffect usedPotionEffect) {
         if (usedPotionEffect.getDuration() <= 0) {
             // Don't add if the potion effect is already expired
             RealisticArmorTiers.LOGGER.warn(usedPotionEffect + " has expired and won't be applied to player. " +
                     "This should not happen unless nbt is edited manually!");
-            return false;
+            return;
         }
 
         EffectInstance effectInstance = usedPotionEffect.effectInstance();
@@ -168,9 +173,6 @@ public class PlayerSetEffects {
             EventEquipmentSets.decrementPlayerPotionAddedIgnore();
             RealisticArmorTiers.LOGGER.warn("Could not apply used potion effect " + effectInstance + " to "
                     + player.getDisplayName().getString());
-            return false;
         }
-
-        return true;
     }
 }
