@@ -5,7 +5,6 @@ import com.viste.realisticarmortiers.capability.ArmorSetCapability;
 import com.viste.realisticarmortiers.data.PotionEffect;
 import com.viste.realisticarmortiers.events.EventEquipmentSets;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 
@@ -16,8 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 public class PlayerSetEffects {
-
-    private static final ArrayList<ItemStack> EMPTY_CURATIVE_ITEMS_LIST = new ArrayList<>();
 
     /**
      * Add a list of set effects to the player
@@ -46,8 +43,7 @@ public class PlayerSetEffects {
      */
     @Nullable
     public static PotionEffect addSetEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSetCapability armorSetCapability, @Nonnull PotionEffect setEffect) {
-        EffectInstance effectInstance = setEffect.effectInstance();
-        effectInstance.setCurativeItems(EMPTY_CURATIVE_ITEMS_LIST);
+        EffectInstance effectInstance = setEffect.getEffectInstance();
 
         if (RealisticArmorTiers.DEBUG_MODE) {
             RealisticArmorTiers.LOGGER.debug("Adding Set Effect " + effectInstance + " to " + player.getDisplayName().getString());
@@ -74,9 +70,7 @@ public class PlayerSetEffects {
             }
         }
 
-        EventEquipmentSets.incrementPlayerPotionAddedIgnore();
-        if(!player.addEffect(effectInstance)) {
-            EventEquipmentSets.decrementPlayerPotionAddedIgnore();
+        if (!addEffectToPlayer(player, effectInstance)) {
             RealisticArmorTiers.LOGGER.warn("Could not apply set effect " + effectInstance + " to "
                     + player.getDisplayName().getString());
             return null;
@@ -112,9 +106,7 @@ public class PlayerSetEffects {
                     RealisticArmorTiers.LOGGER.debug("Removing Set Effect " + playerEffect + " from " + player.getDisplayName().getString());
                 }
 
-                EventEquipmentSets.incrementPlayerPotionRemovedIgnore();
-                if (!player.removeEffect(effect)) {
-                    EventEquipmentSets.decrementPlayerPotionRemovedIgnore();
+                if (!removeEffectFromPlayer(player, effect)) {
                     RealisticArmorTiers.LOGGER.warn("Could not remove set effect " + playerEffect + " from "
                             + player.getDisplayName().getString());
                     return;
@@ -167,12 +159,42 @@ public class PlayerSetEffects {
             return;
         }
 
-        EffectInstance effectInstance = usedPotionEffect.effectInstance();
-        EventEquipmentSets.incrementPlayerPotionAddedIgnore();
-        if(!player.addEffect(effectInstance)) {
-            EventEquipmentSets.decrementPlayerPotionAddedIgnore();
+        EffectInstance effectInstance = usedPotionEffect.getEffectInstance();
+        if (!addEffectToPlayer(player, effectInstance)) {
             RealisticArmorTiers.LOGGER.warn("Could not apply used potion effect " + effectInstance + " to "
                     + player.getDisplayName().getString());
         }
+    }
+
+    /**
+     * Add effect to a Player, make sure to increment (and decrement if necessary) the player potion added ignore counter
+     * @param player the target player to add the effect too
+     * @param effectInstance the effect to add to the player
+     * @return true if successfully added effect to player
+     */
+    public static boolean addEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull EffectInstance effectInstance) {
+        EventEquipmentSets.incrementPlayerPotionAddedIgnore();
+        if(!player.addEffect(effectInstance)) {
+            EventEquipmentSets.decrementPlayerPotionAddedIgnore();
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Remove effect from a Player, make sure to increment (and decrement if necessary) the player potion removed ignore counter
+     * @param player the target player to remove the effect from
+     * @param effect the effect to remove from the player
+     * @return true if successfully removed the effect from the player
+     */
+    public static boolean removeEffectFromPlayer(@Nonnull ServerPlayerEntity player, @Nonnull Effect effect) {
+        EventEquipmentSets.incrementPlayerPotionRemovedIgnore();
+        if (!player.removeEffect(effect)) {
+            EventEquipmentSets.decrementPlayerPotionRemovedIgnore();
+            return false;
+        }
+
+        return true;
     }
 }

@@ -132,7 +132,7 @@ public class ArmorSetsParser {
 			log.info("(JSON File) Loading");
 			List<JsonSets> sets;
 
-			log.info("-> (File Read) Reading JSON files");
+			log.info("-> (File Read) Reading JSON file");
 			try {
 				Gson gson = new Gson();
 
@@ -157,20 +157,18 @@ public class ArmorSetsParser {
 
 			log.info("-> (Armors) Loading Sets");
 			for (JsonSets set : sets) {
-				log.info("| [" + set.id + "]");
-				if(set.id.isEmpty() || !ids.add(set.id)) {
-					log.warn("|---> ID: " + set.id + " already exists or is empty! " +
+				log.info("| [" + set.getId() + "]");
+				if(set.getId().isEmpty() || !ids.add(set.getId())) {
+					log.warn("|---> ID: " + set.getId() + " already exists or is empty! " +
 							"This set is not loaded, make sure no sets have the same ID in equipment_sets.json");
 					continue;
 				}
-				helmet = makeItemListFromStringList(set.helmet);
-				chestplate = makeItemListFromStringList(set.chestplate);
-				leggings = makeItemListFromStringList(set.leggings);
-				boots = makeItemListFromStringList(set.boots);
+				helmet = makeItemListFromStringList(set.getHelmet());
+				chestplate = makeItemListFromStringList(set.getChestplate());
+				leggings = makeItemListFromStringList(set.getLeggings());
+				boots = makeItemListFromStringList(set.getBoots());
 
-				set.validatePotionEffects();
-
-				ArmorSet armorSet = new ArmorSet(set.id, helmet, chestplate, leggings, boots, set.potionEffects);
+				ArmorSet armorSet = new ArmorSet(set.getId(), helmet, chestplate, leggings, boots, set.validateAndGetPotionEffects());
 				armors.addArmorSet(armorSet);
 				log.info("|-> successfully added");
 			}

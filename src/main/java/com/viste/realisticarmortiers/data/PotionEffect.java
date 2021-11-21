@@ -1,13 +1,17 @@
 package com.viste.realisticarmortiers.data;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class PotionEffect {
+	private static final ArrayList<ItemStack> EMPTY_CURATIVE_ITEMS_LIST = new ArrayList<>();
 	private static final int POTION_DURATION = Integer.MAX_VALUE; // 20 ticks ~= 1 second
 
 	private final String id;
@@ -15,6 +19,7 @@ public class PotionEffect {
 	private int duration;
 
 	private Effect effect;
+	private EffectInstance effectInstance;
 
 	/**
 	 * A simple object to store a potion effect
@@ -26,6 +31,14 @@ public class PotionEffect {
 		this.id = potionID;
 		this.setDuration(duration);
 		this.setAmplifier(amplifier);
+	}
+
+	public PotionEffect(String potionID, int amplifier) {
+		this(potionID, 0, amplifier);
+	}
+
+	public PotionEffect(PotionEffectJson json) {
+		this(json.getId(), json.getAmplifier());
 	}
 
 	/**
@@ -50,7 +63,7 @@ public class PotionEffect {
 	}
 
 	public int getDuration() {
-		return this.duration > 0 ? this.duration : POTION_DURATION;
+		return this.duration;
 	}
 
 	public void setDuration(int duration) {
@@ -62,6 +75,7 @@ public class PotionEffect {
 		this.duration = duration;
 	}
 
+	@Nullable
 	public Effect getEffect() {
 		if (this.effect == null ) {
 			this.effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(getId()));
@@ -70,8 +84,13 @@ public class PotionEffect {
 		return this.effect;
 	}
 
-	public EffectInstance effectInstance() {
-		return new EffectInstance(this.getEffect(), this.getDuration(), this.getAmplifier());
+	public EffectInstance getEffectInstance() {
+		if (this.effectInstance == null) {
+			this.effectInstance = new EffectInstance(this.getEffect(), this.getDuration(), this.getAmplifier());
+			this.effectInstance.setCurativeItems(EMPTY_CURATIVE_ITEMS_LIST);
+		}
+
+		return this.effectInstance;
 	}
 
 	@Override

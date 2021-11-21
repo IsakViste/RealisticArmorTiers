@@ -7,14 +7,19 @@ import com.viste.realisticarmortiers.data.ArmorSet;
 import com.viste.realisticarmortiers.data.Armors;
 import com.viste.realisticarmortiers.data.PotionEffect;
 import com.viste.realisticarmortiers.logic.EquippedArmorSetEffects;
+import com.viste.realisticarmortiers.logic.PlayerSetEffects;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.potion.Effect;
+import net.minecraft.potion.EffectInstance;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.PotionEvent;
+import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.List;
+import java.util.Set;
 
 public class EventEquipmentSets {
     private static int playerPotionAddedIgnore = 0;
@@ -99,7 +104,7 @@ public class EventEquipmentSets {
     }
 
     /**
-     * When a potion effect has been added to a player
+     * The moment before a potion effect has been added to the player
      * @param event the PotionAddedEvent
      */
     @SubscribeEvent
@@ -113,14 +118,44 @@ public class EventEquipmentSets {
         if ((entity = event.getEntityLiving()) instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;
             ArmorSetCapability armorSetCapability = player.getCapability(CapabilityArmorSet.CAPABILITY_ARMOR_SET).orElse(null);
-            if (armorSetCapability == null) return;
+            if (armorSetCapability == null) {
+                return;
+            }
 
             RealisticArmorTiers.LOGGER.info(event.getPotionEffect() + " has been added to " + player.getDisplayName().getString());
+            Set<PotionEffect> setEffects = armorSetCapability.getSetEffects();
+            if (!setEffects.isEmpty()) {
+                EffectInstance playerPotionEffect = event.getPotionEffect();
+                Effect effect;
+                for (PotionEffect setEffect : setEffects) {
+                    effect = setEffect.getEffect();
+                    if (!playerPotionEffect.getEffect().equals(effect)) {
+                        continue;
+                    }
+
+                    // If the newly added potion effect is of the same type as the set effect
+                    if(playerPotionEffect.getAmplifier() > setEffect.getAmplifier()) {
+                        // Clear effect of hidden effects (set effect as hidden effect => infinite effect on timer run out)
+                        // TODO: Remove effect before adding it, or stop it from being added!
+                        //  the effect hasn't been added yet, but has been stored
+                        //  That means it will be used to update existing one instead of creating new one, not good!
+                        //  see LivingEntity:addEffect
+                        PlayerSetEffects.removeEffectFromPlayer(player, effect);
+//                        PlayerSetEffects.addEffectToPlayer(player, playerPotionEffect);
+                    } else {
+                        // Otherwise, clear set effect of hidden effect (new potion effect hidden inside set effect)
+                        // by removing set effect and re-adding it in
+                        // TODO: Same as above, just slightly different scenario, but same logic needed here!
+                        PlayerSetEffects.removeEffectFromPlayer(player, effect);
+                        PlayerSetEffects.addEffectToPlayer(player, setEffect.getEffectInstance());
+                    }
+                }
+            }
         }
     }
 
     /**
-     * When a potion effect is removed from a player
+     * The moment before a potion effect has been removed from the player
      * @param event the PotionRemoveEvent
      */
     @SubscribeEvent
@@ -134,14 +169,37 @@ public class EventEquipmentSets {
         if ((entity = event.getEntityLiving()) instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;
             ArmorSetCapability armorSetCapability = player.getCapability(CapabilityArmorSet.CAPABILITY_ARMOR_SET).orElse(null);
-            if (armorSetCapability == null) return;
+            if (armorSetCapability == null) {
+                return;
+            }
 
             RealisticArmorTiers.LOGGER.info(event.getPotionEffect() + " has been removed from " + player.getDisplayName().getString());
+
+            Set<PotionEffect> setEffects = armorSetCapability.getSetEffects();
+            if (!setEffects.isEmpty()) {
+                EffectInstance playerPotionEffect = event.getPotionEffect();
+                if (playerPotionEffect == null) {
+                    return;
+                }
+
+                Effect effect;
+                for (PotionEffect setEffect : setEffects) {
+                    effect = setEffect.getEffect();
+                    if (!playerPotionEffect.getEffect().equals(effect)) {
+                        continue;
+                    }
+
+                    // If the removed potion effect is of the same type as the set effect
+                    event.setCanceled(true);
+                    PlayerSetEffects.removeEffectFromPlayer(player, effect);
+                    PlayerSetEffects.addEffectToPlayer(player, setEffect.getEffectInstance());
+                }
+            }
         }
     }
 
     /**
-     * When a potion effect expires on a player (does NOT call a PotionRemoveEvent *phew*)
+     * The moment before a potion effect expires on a player
      * @param event the PotionExpiryEvent
      */
     @SubscribeEvent
@@ -150,9 +208,31 @@ public class EventEquipmentSets {
         if ((entity = event.getEntityLiving()) instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;
             ArmorSetCapability armorSetCapability = player.getCapability(CapabilityArmorSet.CAPABILITY_ARMOR_SET).orElse(null);
-            if (armorSetCapability == null) return;
+            if (armorSetCapability == null) {
+                return;
+            }
 
             RealisticArmorTiers.LOGGER.info(event.getPotionEffect() + " has expired on " + player.getDisplayName().getString());
+
+            Set<PotionEffect> setEffects = armorSetCapability.getSetEffects();
+            if (!setEffects.isEmpty()) {
+                EffectInstance playerPotionEffect = event.getPotionEffect();
+                if (playerPotionEffect == null) {
+                    return;
+                }
+
+                Effect effect;
+                for (PotionEffect setEffect : setEffects) {
+                    effect = setEffect.getEffect();
+                    if (!playerPotionEffect.getEffect().equals(effect)) {
+                        continue;
+                    }
+
+                    // If the expired potion effect is of the same type as the set effect
+                    PlayerSetEffects.removeEffectFromPlayer(player, effect);
+                    PlayerSetEffects.addEffectToPlayer(player, setEffect.getEffectInstance());
+                }
+            }
         }
     }
 }

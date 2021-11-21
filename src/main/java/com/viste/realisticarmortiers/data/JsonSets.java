@@ -5,12 +5,12 @@ import com.viste.realisticarmortiers.RealisticArmorTiers;
 import java.util.*;
 
 public class JsonSets {
-	public final String id;
-	public List<PotionEffect> potionEffects;
-	public final List<String> helmet;
-	public final List<String> chestplate;
-	public final List<String> leggings;
-	public final List<String> boots;
+	private final String id;
+	private final List<PotionEffectJson> potionEffects;
+	private final List<String> helmet;
+	private final List<String> chestplate;
+	private final List<String> leggings;
+	private final List<String> boots;
 
 	/**
 	 * Store data from the JSON in this object
@@ -23,7 +23,7 @@ public class JsonSets {
 	 * @param boots a list of IDs corresponding to the boots part of this set
 	 * @see net.minecraft.util.ResourceLocation
 	 */
-	public JsonSets(String id, List<PotionEffect> potionEffects, List<String> helmet, List<String> chestplate, List<String> leggings, List<String> boots) {
+	public JsonSets(String id, List<PotionEffectJson> potionEffects, List<String> helmet, List<String> chestplate, List<String> leggings, List<String> boots) {
 		this.id = id;
 		this.potionEffects = potionEffects;
 		this.helmet = helmet;
@@ -33,19 +33,26 @@ public class JsonSets {
 	}
 
 	/**
-	 * Validate that the potion effects of this set
+	 *
+	 * @return List of potion effects of this set (no duplicates)
 	 */
-	public void validatePotionEffects() {
+	public List<PotionEffect> validateAndGetPotionEffects() {
 		// Assert potion effects that ids are not null, no duplicate ids
-		Map<String, PotionEffect> potionEffectMap = new HashMap<>();
-		for (PotionEffect potionEffect : this.potionEffects) {
+		Map<String, PotionEffectJson> potionEffectMap = new HashMap<>();
+		for (PotionEffectJson potionEffect : this.potionEffects) {
+			if (potionEffect.getAmplifier() <= 0) {
+				RealisticArmorTiers.LOGGER.warn("|---> [" + potionEffect
+						+ "] has a negative or null amplifier and will not be loaded!");
+				continue;
+			}
+
 			String id = potionEffect.getId();
 			if (potionEffectMap.containsKey(id)) {
-				PotionEffect potionEffectFromMap = potionEffectMap.get(id);
+				PotionEffectJson potionEffectFromMap = potionEffectMap.get(id);
 				// If already in map with equal or higher amplifier, skip this
 				if (potionEffectFromMap != null && potionEffectFromMap.getAmplifier() >= potionEffect.getAmplifier()) {
-					RealisticArmorTiers.LOGGER.warn("|---> Potion effect [" + potionEffect
-							+ "] already exists [" + potionEffectFromMap + "] and will not be loaded");
+					RealisticArmorTiers.LOGGER.warn("|---> [" + potionEffect
+							+ "] already exists [" + potionEffectFromMap + "] in " + this.id + " and will not be loaded!");
 					continue;
 				}
 			}
@@ -55,7 +62,40 @@ public class JsonSets {
 			potionEffectMap.put(id, potionEffect);
 		}
 
-		this.potionEffects = new ArrayList<>(potionEffectMap.values());
+		// Go through potionEffectMap, and create a PotionEffect for each of the values
+		List<PotionEffect> setEffects = new ArrayList<>();
+		for (PotionEffectJson json : potionEffectMap.values()) {
+			PotionEffect setEffect = new PotionEffect(json);
+			// Make sure they have an effect, meaning that the ID is correct and we could find the effect to apply
+			if (setEffect.getEffect() == null) {
+				RealisticArmorTiers.LOGGER.warn("|---> [" + setEffect + "] could not find effect corresponding to ID \""
+						+ setEffect.getId() + "\" and will therefore not be loaded!");
+				continue;
+			}
+			setEffects.add(setEffect);
+		}
+
+		return setEffects;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public List<String> getHelmet() {
+		return helmet;
+	}
+
+	public List<String> getChestplate() {
+		return chestplate;
+	}
+
+	public List<String> getLeggings() {
+		return leggings;
+	}
+
+	public List<String> getBoots() {
+		return boots;
 	}
 
 	@Override
