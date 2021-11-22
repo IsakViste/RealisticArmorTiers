@@ -26,10 +26,23 @@ public class PlayerSetEffects {
         List<PotionEffect> conflictingPotionEffects = new ArrayList<>();
         for (PotionEffect setEffect : setEffects) {
             PotionEffect conflictingEffect = applySetEffectToPlayer(player, armorSetCapability, setEffect);
+
+            // Add any stored used potion effects that would be overwritten by set, to the conflicting potion list
+            for (PotionEffect usedPotionEffect : armorSetCapability.getUsedPotionEffects()) {
+                if(!usedPotionEffect.getId().equals(setEffect.getId())) {
+                    continue;
+                }
+
+                if(usedPotionEffect.getAmplifier() <= setEffect.getAmplifier()) {
+                    conflictingPotionEffects.add(usedPotionEffect);
+                }
+            }
+
             if (conflictingEffect != null) {
                 conflictingPotionEffects.add(conflictingEffect);
             }
         }
+
         return conflictingPotionEffects;
     }
 
@@ -160,10 +173,7 @@ public class PlayerSetEffects {
         }
 
         EffectInstance effectInstance = usedPotionEffect.getEffectInstance();
-        if (!applyEffectToPlayer(player, effectInstance)) {
-            RealisticArmorTiers.LOGGER.warn("Could not apply used potion effect " + effectInstance + " to "
-                    + player.getDisplayName().getString());
-        }
+        applyEffectToPlayer(player, effectInstance);
     }
 
     /**

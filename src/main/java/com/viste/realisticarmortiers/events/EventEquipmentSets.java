@@ -30,7 +30,11 @@ public class EventEquipmentSets {
      * For example before applying a potion effect, so that we do not handle the potion added event
      */
     public static void incrementPlayerPotionAddedIgnore() {
-        playerPotionAddedIgnore++;
+        if (playerPotionAddedIgnore >= 0) {
+            playerPotionAddedIgnore++;
+        } else {
+            playerPotionAddedIgnore = 1;
+        }
     }
 
     /**
@@ -47,7 +51,11 @@ public class EventEquipmentSets {
      * For example before removing a potion effect, so that we do not handle the potion removal event
      */
     public static void incrementPlayerPotionRemovedIgnore() {
-        playerPotionRemovedIgnore++;
+        if (playerPotionRemovedIgnore >= 0) {
+            playerPotionRemovedIgnore++;
+        } else {
+            playerPotionRemovedIgnore = 1;
+        }
     }
 
     /**
@@ -92,7 +100,6 @@ public class EventEquipmentSets {
                 // Clear set effects stored in the capability and store new SetID
                 EquippedArmorSetEffects.clearArmorSetFromPlayer(player, armorSetCapability, armorSet.getName());
                 List<PotionEffect> conflictingPotionEffects = EquippedArmorSetEffects.applyArmorSetToPlayer(player, armorSetCapability, armorSet);
-                // TODO: Conflicting potion effects does not contain any potion effects in usedPotionEffects, find a way for it to do
                 EquippedArmorSetEffects.applyUsedPotionEffectsToPlayer(player, armorSetCapability, conflictingPotionEffects);
                 return;
             }
@@ -214,7 +221,7 @@ public class EventEquipmentSets {
     @SubscribeEvent
     public void onPlayerPotionEffectExpired(PotionEvent.PotionExpiryEvent event) {
         LivingEntity entity;
-        if ((entity = event.getEntityLiving()) instanceof ServerPlayerEntity) {
+        if (!((entity = event.getEntityLiving()) instanceof ServerPlayerEntity)) {
             return;
         }
         ServerPlayerEntity player = (ServerPlayerEntity) entity;

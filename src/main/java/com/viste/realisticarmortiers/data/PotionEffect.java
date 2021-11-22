@@ -108,16 +108,17 @@ public class PotionEffect {
 		return string;
 	}
 
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		PotionEffect that = (PotionEffect) o;
-		return amplifier == that.amplifier && id.equals(that.id);
+		return id.equals(that.id);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, amplifier);
+		return Objects.hash(id);
 	}
 }

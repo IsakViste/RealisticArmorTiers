@@ -11,16 +11,15 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.StringTextComponent;
 
-public class ReloadJSONCommand {
+public class RATCommands {
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         LiteralArgumentBuilder<CommandSource> clearEffectsCommand
                 = Commands.literal("RAT")
                 .requires((commandSource) -> commandSource.hasPermission(2))
                 .then(Commands.literal("reload")
-                        .executes(ReloadJSONCommand::reloadJSON))
+                        .executes(RATCommands::reloadJSON))
                 .then(Commands.literal("clearNBT").then(Commands.argument("player", EntityArgument.player())
                         .executes((commandSource) -> clearNBT(commandSource.getSource(), EntityArgument.getPlayer(commandSource, "player")))))
                 ;

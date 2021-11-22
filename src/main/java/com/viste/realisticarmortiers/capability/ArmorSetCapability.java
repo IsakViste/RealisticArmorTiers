@@ -68,11 +68,13 @@ public class ArmorSetCapability {
 
     public void addUsedPotionEffect(PotionEffect usedPotionEffect) {
         PotionEffect storedPotionEffect = this.usedPotionEffects.get(usedPotionEffect);
-        if (storedPotionEffect != null && storedPotionEffect.getDuration() >= usedPotionEffect.getDuration()) {
+        if (storedPotionEffect != null && (storedPotionEffect.getAmplifier() > usedPotionEffect.getAmplifier()
+                || (storedPotionEffect.getAmplifier() >= usedPotionEffect.getAmplifier() && storedPotionEffect.getDuration() >= usedPotionEffect.getDuration()))) {
             // If there is a stored potionEffect, and it has longer duration, don't store new one, just skip it
             return;
         }
 
+        this.usedPotionEffects.remove(storedPotionEffect);
         this.usedPotionEffects.put(usedPotionEffect, usedPotionEffect);
     }
 

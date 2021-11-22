@@ -11,6 +11,6 @@ public class RegisterCommandEvent {
     public static void onRegisterCommandEvent(RegisterCommandsEvent event) {
         RealisticArmorTiers.LOGGER.info("Registering Commands!");
         CommandDispatcher<CommandSource> commandDispatcher = event.getDispatcher();
-        ReloadJSONCommand.register(commandDispatcher);
+        RATCommands.register(commandDispatcher);
     }
 }
