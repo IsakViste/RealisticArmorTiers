@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "1.16.5-1.1.1"
+version = "1.16.5-2.0"
 group= "com.viste.realisticarmortiers" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "realisticarmortiers"
 
@@ -47,7 +47,7 @@ minecraft {
             // "SCAN": For mods scan.
             // "REGISTRIES": For firing of registry events.
             // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            //property 'forge.logging.markers', 'SCAN'
 
             // Recommended logging level for the console
             // You can set various levels here.
@@ -69,7 +69,7 @@ minecraft {
             // "SCAN": For mods scan.
             // "REGISTRIES": For firing of registry events.
             // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            //property 'forge.logging.markers', 'SCAN'
 
             // Recommended logging level for the console
             // You can set various levels here.
@@ -91,7 +91,7 @@ minecraft {
             // "SCAN": For mods scan.
             // "REGISTRIES": For firing of registry events.
             // "REGISTRYDUMP": For getting the contents of all registries.
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            //property 'forge.logging.markers', 'SCAN'
 
             // Recommended logging level for the console
             // You can set various levels here.

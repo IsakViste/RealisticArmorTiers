@@ -1,6 +1,6 @@
 [
 {
-  "name": "Godly Assassin",
+  "id": "Godly Assassin",
   "helmet":  ["minecraft:leather_helmet"],
   "chestplate": [
     "minecraft:chainmail_chestplate",
@@ -11,44 +11,44 @@
     "minecraft:golden_leggings"
   ],
   "boots": ["minecraft:leather_boots"],
-  "potion": [
+  "potionEffects": [
     {
-      "effect": "minecraft:speed",
-      "efficiency": 3
+      "id": "minecraft:speed",
+      "amplifier": 3
     },
     {
-      "effect": "minecraft:jump_boost",
-      "efficiency": 1
+      "id": "minecraft:jump_boost",
+      "amplifier": 1
     }
   ]
 },
 {
-  "name": "Skilled Assassin",
+  "id": "Skilled Assassin",
   "helmet": ["minecraft:leather_helmet"],
   "chestplate": ["minecraft:leather_chestplate"],
   "leggings": ["minecraft:leather_leggings"],
   "boots": ["minecraft:leather_boots"],
-  "potion": [
+  "potionEffects": [
     {
-      "effect": "minecraft:speed",
-      "efficiency": 2
+      "id": "minecraft:speed",
+      "amplifier": 2
     },
     {
-      "effect": "minecraft:jump_boost",
-      "efficiency": 1
+      "id": "minecraft:jump_boost",
+      "amplifier": 1
     }
   ]
 },
 {
-  "name": "Assassin",
+  "id": "Assassin",
   "helmet": ["minecraft:leather_helmet"],
   "chestplate": [""],
   "leggings": [""],
   "boots": ["minecraft:leather_boots"],
-  "potion": [
+  "potionEffects": [
     {
-      "effect": "minecraft:speed",
-      "efficiency": 1
+      "id": "minecraft:speed",
+      "amplifier": 1
     }
   ]
 }

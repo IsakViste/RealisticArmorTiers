@@ -1,39 +1,43 @@
 package com.viste.realisticarmortiers;
 
-import com.viste.realisticarmortiers.capability.Armor;
-import com.viste.realisticarmortiers.capability.ArmorHandler;
-import com.viste.realisticarmortiers.capability.ArmorStorage;
-import com.viste.realisticarmortiers.capability.IArmor;
-import com.viste.realisticarmortiers.events.EventEquipmentSets;
-import com.viste.realisticarmortiers.events.EventEquipmentSetsClearActivePotion;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.eventbus.api.IEventBus;
+import com.viste.realisticarmortiers.capability.ArmorSetCapability;
+import com.viste.realisticarmortiers.capability.CapabilityArmorSet;
+import com.viste.realisticarmortiers.data.ArmorSetsParser;
+import com.viste.realisticarmortiers.events.StartupCommon;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraftforge.fml.common.Mod;
+import javax.annotation.Nullable;
 
 
-@Mod(Reference.MODID)
+@Mod(RealisticArmorTiers.MODID)
 public class RealisticArmorTiers {
-	public static final Logger LOGGER = LogManager.getLogger(Reference.MODID);
+    public static final String MODID = "realisticarmortiers";
+    public static final String NAME = "Realistic Armor Tiers";
 
-	// get a reference to the event bus for this mod;  Registration events are fired on this bus.
-	public static IEventBus MOD_EVENT_BUS;
+    public static final Logger LOGGER = LogManager.getLogger(NAME);
+    public static final boolean DEBUG_MODE = true;
 
-	public RealisticArmorTiers() {
+    public static final ArmorSetsParser ARMOR_SETS_PARSER = new ArmorSetsParser();
 
-		MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
+    public RealisticArmorTiers() {
+        FMLJavaModLoadingContext.get().getModEventBus().register(StartupCommon.class);
+    }
 
-		registerCommonEvents();
-	}
+    /**
+     * Reload RealisticArmorTiers equipment_set.json which contains all sets that players can wear to get
+     * potion effects. This allows the player to reload the JSON mid-game, should he/she want to make changes to
+     * the JSON without having to restart the whole client!
+     */
+    public static void reloadJSON(@Nullable ServerPlayerEntity player) {
+        ARMOR_SETS_PARSER.loadArmorSets();
 
-	public static void registerCommonEvents() {
-		CapabilityManager.INSTANCE.register(IArmor.class, new ArmorStorage(), Armor.class);
-		MinecraftForge.EVENT_BUS.register(new EventEquipmentSetsClearActivePotion());
-		MinecraftForge.EVENT_BUS.register(new ArmorHandler());
-		MinecraftForge.EVENT_BUS.register(new EventEquipmentSets());
-	}
+        if(player != null) {
+            ArmorSetCapability armorSetCapability = player.getCapability(CapabilityArmorSet.CAPABILITY_ARMOR_SET).orElse(null);
+//            EventEquipmentSets.checkArmorSetForPlayer(player, armorSet);
+        }
+    }
 }
