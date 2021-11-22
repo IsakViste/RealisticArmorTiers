@@ -6,7 +6,6 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -19,13 +18,12 @@ public class PotionEffect {
 	private int duration;
 
 	private Effect effect;
-	private EffectInstance effectInstance;
 
 	/**
 	 * A simple object to store a potion effect
 	 * @param potionID the id of the potion effect (e.g. "minecraft:speed")
 	 * @param duration the duration the effect should last
-	 * @param amplifier the efficiency of the effect
+	 * @param amplifier the amplifier of the effect
 	 */
 	public PotionEffect(String potionID, int duration, int amplifier) {
 		this.id = potionID;
@@ -33,17 +31,24 @@ public class PotionEffect {
 		this.setAmplifier(amplifier);
 	}
 
+	/**
+	 * A simple constructor for set effect where duration should be POTION_DURATION ( = MAX_VALUE)
+	 * @param potionID the id of the potion effect (e.g. "minecraft:speed")
+	 * @param amplifier the amplifier of the effect
+	 */
 	public PotionEffect(String potionID, int amplifier) {
 		this(potionID, 0, amplifier);
 	}
 
+	/**
+	 * @param json the PotionEffectJson from which to get the information, only used on loading the JSON
+	 */
 	public PotionEffect(PotionEffectJson json) {
 		this(json.getId(), json.getAmplifier());
 	}
 
 	/**
-	 * A simple object to store a potion effect
-	 * @param effectInstance the EffectInstance from which to get information: id, duration and amplifier
+	 * @param effectInstance the EffectInstance from which to get the information: id, duration and amplifier
 	 */
 	public PotionEffect(EffectInstance effectInstance) {
 		this(Objects.requireNonNull(effectInstance.getEffect().getRegistryName()).toString(), effectInstance.getDuration(), effectInstance.getAmplifier());
@@ -74,23 +79,18 @@ public class PotionEffect {
 
 		this.duration = duration;
 	}
-
-	@Nullable
+	
 	public Effect getEffect() {
-		if (this.effect == null ) {
+		if (this.effect == null) {
 			this.effect = ForgeRegistries.POTIONS.getValue(new ResourceLocation(getId()));
 		}
-
 		return this.effect;
 	}
 
 	public EffectInstance getEffectInstance() {
-		if (this.effectInstance == null) {
-			this.effectInstance = new EffectInstance(this.getEffect(), this.getDuration(), this.getAmplifier());
-			this.effectInstance.setCurativeItems(EMPTY_CURATIVE_ITEMS_LIST);
-		}
-
-		return this.effectInstance;
+		EffectInstance effectInstance = new EffectInstance(this.getEffect(), this.getDuration(), this.getAmplifier());
+		effectInstance.setCurativeItems(EMPTY_CURATIVE_ITEMS_LIST);
+		return effectInstance;
 	}
 
 	@Override

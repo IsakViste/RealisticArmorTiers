@@ -48,7 +48,7 @@ public class EquippedArmorSetEffects {
         // Get armor set effects and apply them to player
         List<PotionEffect> setEffects = armorSet.getPotionEffects();
         armorSetCapability.addSetEffects(setEffects);
-        return PlayerSetEffects.addSetEffectsToPlayer(player, armorSetCapability, setEffects);
+        return PlayerSetEffects.applySetEffectsToPlayer(player, armorSetCapability, setEffects);
     }
 
     /**
@@ -62,7 +62,7 @@ public class EquippedArmorSetEffects {
         if(conflictingPotionEffects != null && !conflictingPotionEffects.isEmpty()) {
             conflictingPotionEffects.forEach(potionEffects::remove);
         }
-        PlayerSetEffects.addUsedPotionEffectsToPlayer(player, potionEffects);
+        PlayerSetEffects.applyUsedPotionEffectsToPlayer(player, potionEffects);
         armorSetCapability.removeUsedPotionEffects(potionEffects);
     }
 }

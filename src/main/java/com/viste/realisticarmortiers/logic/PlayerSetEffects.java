@@ -22,10 +22,10 @@ public class PlayerSetEffects {
      * @param armorSetCapability the armor set capability manager of the player
      * @param setEffects the list of set effects to add to the player
      */
-    public static List<PotionEffect> addSetEffectsToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSetCapability armorSetCapability, @Nonnull List<PotionEffect> setEffects) {
+    public static List<PotionEffect> applySetEffectsToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSetCapability armorSetCapability, @Nonnull List<PotionEffect> setEffects) {
         List<PotionEffect> conflictingPotionEffects = new ArrayList<>();
         for (PotionEffect setEffect : setEffects) {
-            PotionEffect conflictingEffect = addSetEffectToPlayer(player, armorSetCapability, setEffect);
+            PotionEffect conflictingEffect = applySetEffectToPlayer(player, armorSetCapability, setEffect);
             if (conflictingEffect != null) {
                 conflictingPotionEffects.add(conflictingEffect);
             }
@@ -42,7 +42,7 @@ public class PlayerSetEffects {
      * @return true if successfully added the set effect to player
      */
     @Nullable
-    public static PotionEffect addSetEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSetCapability armorSetCapability, @Nonnull PotionEffect setEffect) {
+    public static PotionEffect applySetEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull ArmorSetCapability armorSetCapability, @Nonnull PotionEffect setEffect) {
         EffectInstance effectInstance = setEffect.getEffectInstance();
 
         if (RealisticArmorTiers.DEBUG_MODE) {
@@ -70,7 +70,7 @@ public class PlayerSetEffects {
             }
         }
 
-        if (!addEffectToPlayer(player, effectInstance)) {
+        if (!applyEffectToPlayer(player, effectInstance)) {
             RealisticArmorTiers.LOGGER.warn("Could not apply set effect " + effectInstance + " to "
                     + player.getDisplayName().getString());
             return null;
@@ -140,9 +140,9 @@ public class PlayerSetEffects {
      * @param player the target player to add the effects too
      * @param usedPotionEffects the list of potion effects to add to the player
      */
-    public static void addUsedPotionEffectsToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull Set<PotionEffect> usedPotionEffects) {
+    public static void applyUsedPotionEffectsToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull Set<PotionEffect> usedPotionEffects) {
         for (PotionEffect usedPotionEffect : usedPotionEffects) {
-            addUsedPotionEffectToPlayer(player, usedPotionEffect);
+            applyUsedPotionEffectToPlayer(player, usedPotionEffect);
         }
     }
 
@@ -151,7 +151,7 @@ public class PlayerSetEffects {
      * @param player the target player to add the effect too
      * @param usedPotionEffect the potion effect to add to the player
      */
-    public static void addUsedPotionEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull PotionEffect usedPotionEffect) {
+    public static void applyUsedPotionEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull PotionEffect usedPotionEffect) {
         if (usedPotionEffect.getDuration() <= 0) {
             // Don't add if the potion effect is already expired
             RealisticArmorTiers.LOGGER.warn(usedPotionEffect + " has expired and won't be applied to player. " +
@@ -160,7 +160,7 @@ public class PlayerSetEffects {
         }
 
         EffectInstance effectInstance = usedPotionEffect.getEffectInstance();
-        if (!addEffectToPlayer(player, effectInstance)) {
+        if (!applyEffectToPlayer(player, effectInstance)) {
             RealisticArmorTiers.LOGGER.warn("Could not apply used potion effect " + effectInstance + " to "
                     + player.getDisplayName().getString());
         }
@@ -172,7 +172,7 @@ public class PlayerSetEffects {
      * @param effectInstance the effect to add to the player
      * @return true if successfully added effect to player
      */
-    public static boolean addEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull EffectInstance effectInstance) {
+    public static boolean applyEffectToPlayer(@Nonnull ServerPlayerEntity player, @Nonnull EffectInstance effectInstance) {
         EventEquipmentSets.incrementPlayerPotionAddedIgnore();
         if(!player.addEffect(effectInstance)) {
             EventEquipmentSets.decrementPlayerPotionAddedIgnore();

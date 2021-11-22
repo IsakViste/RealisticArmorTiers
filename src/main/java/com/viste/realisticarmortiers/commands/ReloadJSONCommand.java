@@ -11,6 +11,7 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.StringTextComponent;
 
 public class ReloadJSONCommand {
@@ -49,6 +50,7 @@ public class ReloadJSONCommand {
         if (armorSetCapability == null) return 0;
 
         armorSetCapability.clearAll();
+        player.displayClientMessage(new StringTextComponent("Cleared ArmorSet NBT from " + player.getDisplayName().getString()), false);
         return 1;
     }
 }

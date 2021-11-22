@@ -66,7 +66,7 @@ public class JsonSets {
 		List<PotionEffect> setEffects = new ArrayList<>();
 		for (PotionEffectJson json : potionEffectMap.values()) {
 			PotionEffect setEffect = new PotionEffect(json);
-			// Make sure they have an effect, meaning that the ID is correct and we could find the effect to apply
+			// Make sure they have an effect, meaning that the ID is correct, and we could find the effect to apply
 			if (setEffect.getEffect() == null) {
 				RealisticArmorTiers.LOGGER.warn("|---> [" + setEffect + "] could not find effect corresponding to ID \""
 						+ setEffect.getId() + "\" and will therefore not be loaded!");
